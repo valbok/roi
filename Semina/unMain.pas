@@ -1,0 +1,954 @@
+unit unMain;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, ExtCtrls, ComCtrls, Grids, DBGrids, Menus, DBCtrls,unDM, ToolWin,
+  ImgList, Buttons,DBTables;
+
+type
+  TfrmMain = class(TForm)
+    pnlMain: TPanel;
+    gridMain: TDBGrid;
+    StatusBar: TStatusBar;
+    MainMenu: TMainMenu;
+    miService: TMenuItem;
+    pnlTop: TPanel;
+    miConnect: TMenuItem;
+    miDisconnect: TMenuItem;
+    N1: TMenuItem;
+    pmManeger: TPopupMenu;
+    miMode1: TMenuItem;
+    miMode2: TMenuItem;
+    miEdit: TMenuItem;
+    miDelete: TMenuItem;
+    miAdd: TMenuItem;
+    miRefresh: TMenuItem;
+    miSave: TMenuItem;
+    miCancel: TMenuItem;
+    sbNew: TSpeedButton;
+    sbDElete: TSpeedButton;
+    sbPrior: TSpeedButton;
+    sbApply: TSpeedButton;
+    sbCancel: TSpeedButton;
+    sbEdit: TSpeedButton;
+    sbFirst: TSpeedButton;
+    sbNext: TSpeedButton;
+    sbLast: TSpeedButton;
+    sbRefresh: TSpeedButton;
+    N2: TMenuItem;
+    miSelectMode: TMenuItem;
+    miIzdatelstva: TMenuItem;
+    miKnigi: TMenuItem;
+    miJanri: TMenuItem;
+    miAvtori: TMenuItem;
+    miStrani: TMenuItem;
+    miVipusk: TMenuItem;
+    N3: TMenuItem;
+    procedure miConnectClick(Sender: TObject);
+    procedure miDisconnectClick(Sender: TObject);
+    procedure SetNavBTN;
+    procedure sbFirstClick(Sender: TObject);
+    procedure sbPriorClick(Sender: TObject);
+    procedure sbNextClick(Sender: TObject);
+    procedure sbLastClick(Sender: TObject);
+    procedure sbEditClick(Sender: TObject);
+    procedure sbApplyClick(Sender: TObject);
+    procedure sbCancelClick(Sender: TObject);
+    procedure sbRefreshClick(Sender: TObject);
+    procedure sbDEleteClick(Sender: TObject);
+    procedure sbNewClick(Sender: TObject);
+    procedure miEditClick(Sender: TObject);
+    procedure miDeleteClick(Sender: TObject);
+    procedure miAddClick(Sender: TObject);
+    procedure miRefreshClick(Sender: TObject);
+    procedure pmManegerPopup(Sender: TObject);
+    procedure miIzdatelstvaClick(Sender: TObject);
+    procedure miKnigiClick(Sender: TObject);
+    procedure miJanriClick(Sender: TObject);
+    procedure miAvtoriClick(Sender: TObject);
+    procedure miStraniClick(Sender: TObject);
+    procedure miVipuskClick(Sender: TObject);
+    procedure miSaveClick(Sender: TObject);
+    procedure miCancelClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure miMode1Click(Sender: TObject);
+    procedure N1Click(Sender: TObject);
+
+
+  private
+    { Private declarations }
+    _pathTodb:string;
+    procedure SetpathTodb(value:string);
+    procedure setNav(qry:Tquery;var cls:TSet);
+  public
+    { Public declarations }
+    property pathTodb: string read _pathTodb write SetpathTodb;
+  end;
+
+var
+  frmMain: TfrmMain;
+  cls:TSet;
+
+implementation
+uses  unConnect, DB;
+{$R *.dfm}
+procedure TfrmMain.SetpathTodb(value:string);
+begin
+  _pathTodb:=value;
+end;
+procedure TfrmMain.miConnectClick(Sender: TObject);
+begin
+  frmConnect.Show;
+end;
+
+procedure TfrmMain.miDisconnectClick(Sender: TObject);
+begin
+   dm.Database.Connected:=false;
+end;
+procedure TfrmMain.setNav(qry:Tquery;var cls:TSet);
+begin
+  sbFirst.Enabled := not cls.isBOF(qry);
+  sbLast.Enabled  := not cls.isEOF(qry);
+  sbPrior.Enabled  := not cls.isBOF(qry);
+  sbNext.Enabled  := not cls.isEOF(qry);
+
+end;
+procedure TFrmMain.SetNavBTN;
+begin
+try
+ try
+    gridMain.Cursor:=crHourGlass;
+      with dm do
+      begin
+        if gridMain.DataSource=dsQryAllKnigi then setNav(qryAllKnigi,cls);
+        if gridMain.DataSource=dsQryAllIzdatelstva then setNav(qryAllizdatelstva,cls);
+        if gridMain.DataSource=dsQryAllJanri then setNav(qryAllJanri,cls);
+        if gridMain.DataSource=dsQryAllAvtori then setNav(qryAllAvtori,cls);
+        if gridMain.DataSource=dsqryAllStrani then setNav(qryAllStrani,cls);
+        if gridMain.DataSource=dsqryAllVipusk then setNav(qryAllVipusk,cls);
+  if gridMain.DataSource=dsqryVipuski then setNav(qryVipuski,cls);
+  if gridMain.DataSource=dsqryVipuskK then setNav(qryVipuskK,cls);
+  if gridMain.DataSource=dsqryKnigiJ then setNav(qryKnigiJ,cls);
+  if gridMain.DataSource=dsqryKnigiA then setNav(qryKnigiA,cls);
+  if gridMain.DataSource=dsqryAvtori then setNav(qryavtori,cls);
+
+      end;
+finally
+    gridMain.Cursor:=crDefault;
+    cursor:=crDefault;
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+end;
+
+procedure TfrmMain.sbFirstClick(Sender: TObject);
+begin
+try
+ try
+    gridMain.Cursor:=crHourGlass;
+
+with dm do
+begin
+  if gridMain.DataSource=dsQryAllKnigi then cls.SetFirst(qryAllKnigi);
+  if gridMain.DataSource=dsQryAllIzdatelstva then cls.SetFirst(qryAllizdatelstva);
+  if gridMain.DataSource=dsQryAllJanri then cls.SetFirst(qryAllJanri);
+  if gridMain.DataSource=dsQryAllAvtori then cls.SetFirst(qryAllAvtori);
+  if gridMain.DataSource=dsqryAllStrani then cls.SetFirst(qryAllStrani);
+  if gridMain.DataSource=dsqryAllVipusk then cls.SetFirst(qryAllVipusk);
+
+  if gridMain.DataSource=dsqryVipuski then cls.SetFirst(qryVipuski);
+  if gridMain.DataSource=dsqryVipuskK then cls.SetFirst(qryVipuskk);
+  if gridMain.DataSource=dsqryKnigiJ then cls.SetFirst(qryKnigiJ);
+  if gridMain.DataSource=dsqryKnigiA then cls.SetFirst(qryKnigiA);
+  if gridMain.DataSource=dsqryAvtori then cls.SetFirst(qryavtori);
+
+  SetNavBTN;
+end;
+finally
+    gridMain.Cursor:=crDefault;
+    cursor:=crDefault;
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+end;
+
+procedure TfrmMain.sbPriorClick(Sender: TObject);
+begin
+try
+ try
+    gridMain.Cursor:=crHourGlass;
+
+with dm do
+begin
+  if gridMain.DataSource=dsQryAllKnigi then cls.SetPrior(qryAllKnigi);
+  if gridMain.DataSource=dsQryAllIzdatelstva then cls.SetPrior(qryAllizdatelstva);
+  if gridMain.DataSource=dsQryAllJanri then cls.SetPrior(qryAllJanri);
+  if gridMain.DataSource=dsQryAllAvtori then cls.SetPrior(qryAllAvtori);
+  if gridMain.DataSource=dsqryAllStrani then cls.SetPrior(qryAllStrani);
+  if gridMain.DataSource=dsqryAllVipusk then cls.SetPrior(qryAllVipusk);
+
+  if gridMain.DataSource=dsqryVipuski then cls.SetPrior(qryVipuski);
+  if gridMain.DataSource=dsqryVipuskK then cls.SetPrior(qryVipuskk);
+  if gridMain.DataSource=dsqryKnigiJ then cls.SetPrior(qryKnigiJ);
+  if gridMain.DataSource=dsqryKnigiA then cls.SetPrior(qryKnigiA);
+  if gridMain.DataSource=dsqryAvtori then cls.SetPrior(qryavtori);
+
+  SetNavBTN;
+end;
+finally
+    gridMain.Cursor:=crDefault;
+    cursor:=crDefault;
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+end;
+
+procedure TfrmMain.sbNextClick(Sender: TObject);
+begin
+try
+ try
+    gridMain.Cursor:=crHourGlass;
+
+with dm do
+begin
+  if gridMain.DataSource=dsQryAllKnigi then cls.SetNext(qryAllKnigi);
+  if gridMain.DataSource=dsQryAllIzdatelstva then cls.SetNext(qryAllizdatelstva);
+  if gridMain.DataSource=dsQryAllJanri then cls.SetNext(qryAllJanri);
+  if gridMain.DataSource=dsQryAllAvtori then cls.SetNext(qryAllAvtori);
+  if gridMain.DataSource=dsqryAllStrani then cls.SetNext(qryAllStrani);
+  if gridMain.DataSource=dsqryAllVipusk then cls.SetNext(qryAllVipusk);
+
+  if gridMain.DataSource=dsqryVipuski then cls.SetNext(qryVipuski);
+  if gridMain.DataSource=dsqryVipuskK then cls.SetNext(qryVipuskk);
+  if gridMain.DataSource=dsqryKnigiJ then cls.SetNext(qryKnigiJ);
+  if gridMain.DataSource=dsqryKnigiA then cls.SetNext(qryKnigiA);
+  if gridMain.DataSource=dsqryAvtori then cls.SetNext(qryavtori);
+
+  SetNavBTN;
+end;
+finally
+    gridMain.Cursor:=crDefault;
+    cursor:=crDefault;
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+end;
+
+procedure TfrmMain.sbLastClick(Sender: TObject);
+begin
+try
+ try
+    gridMain.Cursor:=crHourGlass;
+
+with dm do
+begin
+  if gridMain.DataSource=dsQryAllKnigi then cls.SetLast(qryAllKnigi);
+  if gridMain.DataSource=dsQryAllIzdatelstva then cls.SetLast(qryAllizdatelstva);
+  if gridMain.DataSource=dsQryAllJanri then cls.SetLast(qryAllJanri);
+  if gridMain.DataSource=dsQryAllAvtori then cls.SetLast(qryAllAvtori);
+  if gridMain.DataSource=dsqryAllStrani then cls.SetLast(qryAllStrani);
+  if gridMain.DataSource=dsqryAllVipusk then cls.SetLast(qryAllVipusk);
+
+  if gridMain.DataSource=dsqryVipuski then cls.SetLast(qryVipuski);
+  if gridMain.DataSource=dsqryVipuskK then cls.SetLast(qryVipuskk);
+  if gridMain.DataSource=dsqryKnigiJ then cls.SetLast(qryKnigiJ);
+  if gridMain.DataSource=dsqryKnigiA then cls.SetLast(qryKnigiA);
+  if gridMain.DataSource=dsqryAvtori then cls.SetLast(qryavtori);
+
+  SetNavBTN;
+end;
+finally
+    gridMain.Cursor:=crDefault;
+    cursor:=crDefault;
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+end;
+
+procedure TfrmMain.sbEditClick(Sender: TObject);
+begin
+try
+ try
+    gridMain.Cursor:=crHourGlass;
+
+with dm do
+begin
+  if gridMain.DataSource=dsQryAllKnigi then cls.SetEdit(qryAllKnigi);
+  if gridMain.DataSource=dsQryAllIzdatelstva then cls.SetEdit(qryAllizdatelstva);
+  if gridMain.DataSource=dsQryAllJanri then cls.SetEdit(qryAllJanri);
+  if gridMain.DataSource=dsQryAllAvtori then cls.SetEdit(qryAllAvtori);
+  if gridMain.DataSource=dsqryAllStrani then cls.SetEdit(qryAllStrani);
+  if gridMain.DataSource=dsqryAllVipusk then cls.SetEdit(qryAllVipusk);
+
+  if gridMain.DataSource=dsqryVipuski then cls.SetEdit(qryVipuski);
+  if gridMain.DataSource=dsqryVipuskK then cls.SetEdit(qryVipuskk);
+  if gridMain.DataSource=dsqryKnigiJ then cls.SetEdit(qryKnigiJ);
+  if gridMain.DataSource=dsqryKnigiA then cls.SetEdit(qryKnigiA);
+  if gridMain.DataSource=dsqryAvtori then cls.SetEdit(qryavtori);
+
+//  SetNavBTN;
+end;
+finally
+    gridMain.Cursor:=crDefault;
+    cursor:=crDefault;
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+end;
+
+procedure TfrmMain.sbApplyClick(Sender: TObject);
+begin
+try
+ try
+    gridMain.Cursor:=crHourGlass;
+
+with dm do
+begin
+  if gridMain.DataSource=dsQryAllKnigi then cls.SetApplyUpdates(qryAllKnigi);
+  if gridMain.DataSource=dsQryAllIzdatelstva then cls.SetApplyUpdates(qryAllizdatelstva);
+  if gridMain.DataSource=dsQryAllJanri then cls.SetApplyUpdates(qryAllJanri);
+  if gridMain.DataSource=dsQryAllAvtori then cls.SetApplyUpdates(qryAllAvtori);
+  if gridMain.DataSource=dsqryAllStrani then cls.SetApplyUpdates(qryAllStrani);
+  if gridMain.DataSource=dsqryAllVipusk then cls.SetApplyUpdates(qryAllVipusk);
+
+  if gridMain.DataSource=dsqryVipuski then cls.SetApplyUpdates(qryVipuski);
+  if gridMain.DataSource=dsqryVipuskK then cls.SetApplyUpdates(qryVipuskk);
+  if gridMain.DataSource=dsqryKnigiJ then cls.SetApplyUpdates(qryKnigiJ);
+  if gridMain.DataSource=dsqryKnigiA then cls.SetApplyUpdates(qryKnigiA);
+  if gridMain.DataSource=dsqryAvtori then cls.SetApplyUpdates(qryavtori);
+//  SetNavBTN;
+end;
+finally
+    gridMain.Cursor:=crDefault;
+    cursor:=crDefault;
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+end;
+
+procedure TfrmMain.sbCancelClick(Sender: TObject);
+begin
+try
+ try
+    gridMain.Cursor:=crHourGlass;
+
+with dm do
+begin
+  if gridMain.DataSource=dsQryAllKnigi then cls.SetCancelUpdates(qryAllKnigi);
+  if gridMain.DataSource=dsQryAllIzdatelstva then cls.SetCancelUpdates(qryAllizdatelstva);
+  if gridMain.DataSource=dsQryAllJanri then cls.SetCancelUpdates(qryAllJanri);
+  if gridMain.DataSource=dsQryAllAvtori then cls.SetCancelUpdates(qryAllAvtori);
+  if gridMain.DataSource=dsqryAllStrani then cls.SetCancelUpdates(qryAllStrani);
+  if gridMain.DataSource=dsqryAllVipusk then cls.SetCancelUpdates(qryAllVipusk);
+
+  if gridMain.DataSource=dsqryVipuski then cls.SetCancelUpdates(qryVipuski);
+  if gridMain.DataSource=dsqryVipuskK then cls.SetCancelUpdates(qryVipuskk);
+  if gridMain.DataSource=dsqryKnigiJ then cls.SetCancelUpdates(qryKnigiJ);
+  if gridMain.DataSource=dsqryKnigiA then cls.SetCancelUpdates(qryKnigiA);
+  if gridMain.DataSource=dsqryAvtori then cls.SetCancelUpdates(qryavtori);
+
+//  SetNavBTN;
+end;
+finally
+    gridMain.Cursor:=crDefault;
+    cursor:=crDefault;
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+end;
+
+procedure TfrmMain.sbRefreshClick(Sender: TObject);
+begin
+try
+ try
+    gridMain.Cursor:=crHourGlass;
+
+with dm do
+begin
+  if gridMain.DataSource=dsQryAllKnigi then
+  begin
+   qryAllKnigi.Close;
+   qryAllKnigi.Open;
+  end else
+  if gridMain.DataSource=dsQryAllIzdatelstva then
+  begin
+    qryAllizdatelstva.Close;
+    qryAllizdatelstva.Open;    
+  end else
+  if gridMain.DataSource=dsQryAllJanri then
+  begin
+    qryAllJanri.close;
+    qryAllJanri.Open;
+  end else
+  if gridMain.DataSource=dsQryAllAvtori then
+  begin
+    qryAllAvtori.Close;
+    qryAllAvtori.Open;      
+  end else
+  if gridMain.DataSource=dsqryAllStrani then
+  begin
+    qryAllStrani.Close;
+    qryAllStrani.Open;      
+  end else
+  if gridMain.DataSource=dsqryAllVipusk then
+  begin
+    qryAllVipusk.close;
+    qryAllVipusk.Open;
+  end else
+
+  if gridMain.DataSource=dsqryVipuski then
+  begin
+    qryVipuski.close;
+    qryVipuski.Open;
+  end else
+  if gridMain.DataSource=dsqryVipuskK then
+   begin
+    qryVipuskK.close;
+    qryVipuskK.Open;
+  end else
+  if gridMain.DataSource=dsqryKnigiJ then
+  begin
+    qryKnigiJ.close;
+    qryKnigiJ.Open;
+  end else
+  if gridMain.DataSource=dsqryKnigiA then
+   begin
+    qryKnigiA.close;
+    qryKnigiA.Open;
+  end else
+  if gridMain.DataSource=dsqryAvtori then
+  begin
+    qryAvtori.close;
+    qryAvtori.Open;
+  end else
+
+
+end;
+finally
+    gridMain.Cursor:=crDefault;
+    cursor:=crDefault;
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+end;
+
+procedure TfrmMain.sbDEleteClick(Sender: TObject);
+begin
+ with dm do
+ try
+   try
+     gridMain.Cursor:=crHourGlass;
+     if gridMain.DataSource=dsQryAllIzdatelstva then
+          if messagedlg('Удалить ИЗДАТЕЛЬСТВО "'+qryAllizdatelstva.FieldByName('name').AsString+'`? При удалении все выпуски этого издательства тоже удалятся!',
+                        mtConfirmation,[mbYes,mbNo],0) = mryes then
+                          begin
+                                spDElete_Izdatelstvo.ParamByName('iizdatelstvo_id').Asinteger:=qryAllizdatelstva.FieldByName('id').AsInteger;
+                                cls.SetDelete(spDElete_Izdatelstvo);
+                                showmessage('Издательство `'+qryAllizdatelstva.FieldByName('name').AsString+'` удалёно!');
+                          end;
+     if gridMain.DataSource=dsQryAllKnigi then
+          if messagedlg('Удалить книгу `'+qryAllKnigi.FieldByName('name').AsString+'`? При удалении все выпуски этой книги тоже удалятся!',
+                        mtConfirmation,[mbYes,mbNo],0) = mryes then
+                          begin
+//                          showmessage(spDelete_Kniga.Params[0].Text);
+                                spDelete_Kniga.ParamByName('IKNIGA_ID').AsInteger:=qryAllKnigi.FieldByName('id').AsInteger;
+                                cls.SetDelete(spDElete_kniga);
+                                showmessage('Книга `'+qryAllKnigi.FieldByName('name').AsString+'` удалёна!');
+                          end;
+      if gridMain.DataSource=dsQryAllJanri then
+       begin
+          if messagedlg('Удалить жанр `'+qryAllJanri.FieldByName('name').AsString+'`?',
+                        mtConfirmation,[mbYes,mbNo],0) = mryes then
+                          begin
+                                spDelete_Janr.ParamByName('ijanr_name').AsString:=qryAllJanri.FieldByName('name').AsString;
+                                cls.SetDelete(spDelete_Janr);
+                                showmessage('Жанр удален!');
+                          end;
+
+       end;
+
+     if gridMain.DataSource=dsQryAllAvtori then
+       begin
+                 if messagedlg('Удалить автора "'+qryAllAvtori.FieldByName('fam').AsString+' '+qryAllAvtori.FieldByName('name').AsString+' "? Все книги и выпуски также удалятся!',
+                        mtConfirmation,[mbYes,mbNo],0) = mryes then
+                          begin
+                                spDelete_avtor.ParamByName('iavtor_id').Asinteger:=qryAllAvtori.FieldByName('id').AsInteger;
+                                cls.SetDelete(spDelete_avtor);
+                                showmessage('Автор "'+qryAllAvtori.FieldByName('Fam').AsString+'` удален!');
+                          end;
+       end else
+     if gridMain.DataSource=dsqryAllStrani     then
+       begin
+          if messagedlg('Удалить Страну "'+qryAllStrani.FieldByName('name').AsString+'"?',
+                        mtConfirmation,[mbYes,mbNo],0) = mryes then
+                          begin
+                                spDelete_strana.ParamByName('istrana_name').Asstring:=qryAllStrani.FieldByName('name').Asstring;
+                                cls.SetDelete(spDelete_strana);
+                                showmessage('Страна удалена!');
+                          end;
+
+       end else
+     if gridMain.DataSource=dsqryAllVipusk then
+     begin
+          if messagedlg('Удалить Выпуск ?',
+                        mtConfirmation,[mbYes,mbNo],0) = mryes then
+                          begin
+                                spDelete_vipusk.ParamByName('ivipusk_id').AsInteger:=qryAllVipusk.FieldByName('id').Asinteger;
+                                cls.SetDelete(spDelete_vipusk);
+                                showmessage('Выпуск удален!');
+                          end;
+
+     end else
+     if gridMain.DataSource=dsqryVipuskK then
+     begin
+          if messagedlg('Удалить Выпуск `'+intToStr(qryVipuskK.FieldByName('id').Asinteger)+'?',
+                        mtConfirmation,[mbYes,mbNo],0) = mryes then
+                          begin
+                                spDelete_vipusk.ParamByName('ivipusk_id').AsInteger:=qryVipuskK.FieldByName('id').Asinteger;
+                                cls.SetDelete(spDelete_vipusk);
+                                showmessage('Выпуск удален!');
+                          end;
+     end else
+     if gridMain.DataSource=dsqryVipuski then
+       begin
+          if messagedlg('Удалить Выпуск `'+intToStr(qryVipuskK.FieldByName('id').Asinteger)+'?',
+                        mtConfirmation,[mbYes,mbNo],0) = mryes then
+                          begin
+                                spDelete_vipusk.ParamByName('ivipusk_id').AsInteger:=qryVipuski.FieldByName('id').Asinteger;
+                                cls.SetDelete(spDelete_vipusk);
+                                showmessage('Выпуск удален!');
+                          end;
+       end else
+     if gridMain.DataSource=dsqryKnigiJ then
+       begin
+          if messagedlg('Удалить книгу `'+qryKnigiJ.FieldByName('name').AsString+'`? При удалении все выпуски этой книги тоже удалятся!',
+                        mtConfirmation,[mbYes,mbNo],0) = mryes then
+                          begin
+                                spDelete_Kniga.ParamByName('ikniga_id').AsInteger:=qryKnigiJ.FieldByName('id').AsInteger;
+                                cls.SetDelete(spDElete_kniga);
+                                showmessage('Книга `'+qryKnigiJ.FieldByName('name').AsString+'` удалёна!');
+                          end;
+       end else
+     if gridMain.DataSource=dsqryKnigiA then
+       begin
+          if messagedlg('Удалить книгу `'+qryKnigiA.FieldByName('name').AsString+'`? При удалении все выпуски этой книги тоже удалятся!',
+                        mtConfirmation,[mbYes,mbNo],0) = mryes then
+                          begin
+                                spDelete_Kniga.ParamByName('ikniga_id').AsInteger:=qryKnigiA.FieldByName('id').AsInteger;
+                                cls.SetDelete(spDElete_kniga);
+                                showmessage('Книга `'+qryKnigiA.FieldByName('name').AsString+'` удалёна!');
+                          end;
+       end else
+
+     if gridMain.DataSource=dsqryAvtori      then
+       begin
+                 if messagedlg('Удалить автора "'+qryAvtori.FieldByName('fam').AsString+' '+qryAvtori.FieldByName('name').AsString+' "? Все книги и выпуски также удалятся!',
+                        mtConfirmation,[mbYes,mbNo],0) = mryes then
+                          begin
+                                spDelete_avtor.ParamByName('iavtor_id').Asinteger:=qryAvtori.FieldByName('id').AsInteger;
+                                cls.SetDelete(spDelete_avtor);
+                                showmessage('Автор "'+qryAvtori.FieldByName('Fam').AsString+'` удален!');
+                          end;
+       end else
+   finally
+    gridMain.Cursor:=crDefault;
+   end;
+ except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+
+
+end;
+
+procedure TfrmMain.sbNewClick(Sender: TObject);
+begin
+try
+ try
+    gridMain.Cursor:=crHourGlass;
+
+with dm do
+begin
+  if gridMain.DataSource=dsQryAllKnigi then qryAllKnigi.Insert;
+  if gridMain.DataSource=dsQryAllIzdatelstva then qryAllizdatelstva.Insert;
+  if gridMain.DataSource=dsQryAllJanri then qryAllJanri.Insert;
+  if gridMain.DataSource=dsQryAllAvtori then qryAllAvtori.Insert;
+  if gridMain.DataSource=dsqryAllStrani then qryAllStrani.Insert;
+  if gridMain.DataSource=dsqryAllVipusk then qryAllVipusk.Insert;
+
+  if gridMain.DataSource=dsqryVipuski then qryVipuski.Insert;
+  if gridMain.DataSource=dsqryVipuskK then qryVipuskk.Insert;
+  if gridMain.DataSource=dsqryKnigiJ then qryKnigiJ.Insert;
+  if gridMain.DataSource=dsqryKnigiA then qryKnigiA.Insert;
+  if gridMain.DataSource=dsqryAvtori then qryavtori.Insert;
+//  SetNavBTN;
+end;
+finally
+    gridMain.Cursor:=crDefault;
+    cursor:=crDefault;
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+
+end;
+
+procedure TfrmMain.miEditClick(Sender: TObject);
+begin
+  sbEdit.Click;
+end;
+
+procedure TfrmMain.miDeleteClick(Sender: TObject);
+begin
+ sbDElete.Click;
+end;
+
+procedure TfrmMain.miAddClick(Sender: TObject);
+begin
+  sbNew.Click;
+end;
+
+procedure TfrmMain.miRefreshClick(Sender: TObject);
+begin
+  sbRefresh.Click;
+end;
+
+procedure TfrmMain.pmManegerPopup(Sender: TObject);
+begin
+try
+  with dm do
+  begin
+      miEdit.Enabled:=gridMain.SelectedField.Text<>'';
+      miDelete.Enabled:=gridMain.SelectedField.Text<>'';
+      miDelete.Caption:='Удалить';
+      miMode1.Visible:=false;
+      miMode2.Visible:=false;
+
+    if gridMain.DataSource =dsQryAllIzdatelstva then
+    begin
+      miEdit.Enabled:=gridMain.SelectedField.Text<>'';
+      miDelete.Enabled:=gridMain.SelectedField.Text<>'';
+      miAdd.Enabled:=true;
+      miMode1.Visible:=true;
+      miMode1.Caption:='Выпуски издательства';
+      miMode2.Visible:=false;
+    end else
+    if gridMain.DataSource =dsQryAllKnigi then
+    begin
+      miEdit.Enabled:=gridMain.SelectedField.Text<>'';
+      miDelete.Enabled:=gridMain.SelectedField.Text<>'';
+      miMode1.Visible:=true;
+      miMode2.Visible:=false;
+      miMode1.Caption:='Выпуски книг';
+      miAdd.Enabled:=true;
+    end else
+    if gridMain.DataSource =dsQryAllJanri then
+    begin
+      miEdit.Enabled:=gridMain.SelectedField.Text<>'';
+      miDelete.Enabled:=gridMain.SelectedField.Text<>'';
+      miMode1.Visible:=true;
+      miMode2.Visible:=false;
+      miMode1.Caption:='Книги жанра';
+      miAdd.Enabled:=true;
+     end else
+    if gridMain.DataSource =dsQryAllAvtori then
+    begin
+      miEdit.Enabled:=gridMain.SelectedField.Text<>'';
+      miDelete.Enabled:=gridMain.SelectedField.Text<>'';
+      miMode1.Visible:=true;
+      miMode2.Visible:=false;
+      miMode1.Caption:='Книги автора';
+      miAdd.Enabled:=true;
+    end else
+    if gridMain.DataSource =dsqryAllStrani then
+    begin
+      miEdit.Enabled:=gridMain.SelectedField.Text<>'';
+      miDelete.Enabled:=gridMain.SelectedField.Text<>'';
+      miMode1.Visible:=true;
+      miMode2.Visible:=false;
+      miMode1.Caption:='Авторы страны';
+      miAdd.Enabled:=true;
+    end else
+
+  end
+  except
+      miEdit.Enabled:=false;
+      miDelete.Enabled:=false;
+      miDelete.Caption:='Удалить';
+      miMode1.Visible:=false;
+      miMode2.Visible:=false;
+      miAdd.Enabled:=false;
+      miAdd.Caption:='Добавить';
+  end;
+
+end;
+
+procedure TfrmMain.miIzdatelstvaClick(Sender: TObject);
+begin
+try
+  try
+    gridMain.Cursor:=crHourGlass;
+    gridMain.DataSource:=dm.dsQryAllIzdatelstva ;
+    if not dm.qryAllizdatelstva.Active then
+      dm.qryAllizdatelstva.Active:=true;
+     StatusBar.Panels[0].Text:='Издательства';
+     StatusBar.Refresh;
+     setNavBTN;
+ finally
+    gridMain.Cursor:=crDefault;
+
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+
+end;
+
+procedure TfrmMain.miKnigiClick(Sender: TObject);
+begin
+try
+  try
+    gridMain.Cursor:=crHourGlass;
+    gridMain.DataSource:=dm.dsQryAllKnigi;
+    if not dm.qryAllKnigi.Active then
+      dm.qryAllKnigi.Active:=true;
+     StatusBar.Panels[0].Text:='Книги';
+     StatusBar.Refresh;
+     setNavBTN;     
+ finally
+    gridMain.Cursor:=crDefault;
+
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+
+end;
+
+procedure TfrmMain.miJanriClick(Sender: TObject);
+begin
+try
+  try
+    gridMain.Cursor:=crHourGlass;
+    gridMain.DataSource:=dm.dsQryAllJanri ;
+    if not dm.qryAllJanri.Active then
+      dm.qryAllJanri.Active:=true;
+     StatusBar.Panels[0].Text:='Жанры';
+     StatusBar.Refresh;
+     setNavBTN;     
+ finally
+    gridMain.Cursor:=crDefault;
+
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+
+end;
+
+procedure TfrmMain.miAvtoriClick(Sender: TObject);
+begin
+try
+  try
+    gridMain.Cursor:=crHourGlass;
+    gridMain.DataSource:=dm.dsQryAllAvtori;
+    if not dm.qryAllAvtori.Active then
+      dm.qryAllAvtori.Active:=true;
+     StatusBar.Panels[0].Text:='Авторы';
+     StatusBar.Refresh;
+     setNavBTN;     
+ finally
+    gridMain.Cursor:=crDefault;
+
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+
+end;
+
+procedure TfrmMain.miStraniClick(Sender: TObject);
+begin
+try
+  try
+    gridMain.Cursor:=crHourGlass;
+    gridMain.DataSource:=dm.dsqryAllStrani;
+    if not dm.qryAllStrani.Active then
+      dm.qryAllStrani.Active:=true;
+     StatusBar.Panels[0].Text:='Страны';
+     StatusBar.Refresh;
+          setNavBTN;
+ finally
+    gridMain.Cursor:=crDefault;
+
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+
+end;
+
+procedure TfrmMain.miVipuskClick(Sender: TObject);
+begin
+try
+  try
+    gridMain.Cursor:=crHourGlass;
+    gridMain.DataSource:=dm.dsqryAllVipusk;
+    if not dm.qryAllVipusk.Active then
+      dm.qryAllVipusk.Active:=true;
+     StatusBar.Panels[0].Text:='Выпуск';
+     StatusBar.Refresh;
+     setNavBTN;
+ finally
+    gridMain.Cursor:=crDefault;
+
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+
+end;
+
+procedure TfrmMain.miSaveClick(Sender: TObject);
+begin
+  sbApply.Click;
+end;
+
+procedure TfrmMain.miCancelClick(Sender: TObject);
+begin
+   sbCancel.Click;
+end;
+
+procedure TfrmMain.FormCreate(Sender: TObject);
+begin
+ sbNew.Enabled:=false;
+ sbApply.Enabled:=false;
+ sbCancel.Enabled:=false;
+ sbDElete.Enabled:=false;
+ sbEdit.Enabled:=false;
+
+ sbFirst.Enabled:=false;
+ sbLast.Enabled:=false;
+ sbNext.Enabled:=false;
+ sbPrior.Enabled:=false;
+ sbRefresh.Enabled:=false;
+end;
+
+procedure TfrmMain.miMode1Click(Sender: TObject);
+begin
+with dm do
+ try
+   try
+     gridMain.Cursor:=crHourGlass;
+
+     if gridMain.DataSource=dsQryAllIzdatelstva then
+     begin
+           gridMain.DataSource:=dsqryVipuski;
+           if not qryVipuski.Active then
+             qryVipuski.Open;
+
+
+           StatusBar.Panels[0].Text:='Выпуск издательства '+qryAllizdatelstva.fieldByName('name').AsString;
+           StatusBar.Refresh;
+     end;
+     if gridMain.DataSource=dsQryAllKnigi then
+     begin
+           gridMain.DataSource:=dsqryVipuskK;
+           if not qryVipuskK.Active then
+             qryVipuskK.Open;
+
+
+           StatusBar.Panels[0].Text:='Выпуск книги '+qryAllKnigi.fieldByName('name').AsString;
+           StatusBar.Refresh;
+     end;
+
+     if gridMain.DataSource=dsQryAllJanri then
+       begin
+           gridMain.DataSource:=dsqryKnigiJ;
+           if not qryKnigiJ.Active then
+               qryKnigiJ.Open;
+
+
+           StatusBar.Panels[0].Text:='Книги жанра '+qryAllJanri.fieldByName('name').AsString;
+           StatusBar.Refresh;
+       end;
+     if gridMain.DataSource=dsQryAllAvtori  then
+       begin
+           gridMain.DataSource:=dsqryKnigiA;
+
+           if not qryKnigiA.Active then
+                        qryKnigiA.Active:=true;
+           StatusBar.Panels[0].Text:='Книги автора '+qryAllAvtori.fieldByName('Fam').AsString;
+           StatusBar.Refresh;
+       end;
+     if gridMain.DataSource=dsqryAllStrani then
+       begin
+           gridMain.DataSource:=dsqryAvtori;
+
+           if not qryAvtori.Active then
+                        qryAvtori.Active:=true;
+           StatusBar.Panels[0].Text:='Авторы страны ' +qryAllStrani.fieldByName('name').AsString;
+           StatusBar.Refresh;
+       end;
+   finally
+     gridMain.Cursor:=crDefault;
+ end;
+ except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+     
+end;
+
+procedure TfrmMain.N1Click(Sender: TObject);
+begin
+ close;
+end;
+
+initialization
+  cls:=TSet.Create;
+
+end.

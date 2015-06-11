@@ -1,0 +1,631 @@
+unit unDMBooks;
+
+interface
+
+uses
+  SysUtils, Classes, DBTables, DB,QDialogs;
+
+type
+  TdmBooks = class(TDataModule)
+    dbBooks: TDatabase;
+    qRelese: TQuery;
+    qBooks: TQuery;
+    qPublishing: TQuery;
+    qGenres: TQuery;
+    qAuthors: TQuery;
+    qCountries: TQuery;
+    udBooks: TUpdateSQL;
+    udPublishing: TUpdateSQL;
+    udGenres: TUpdateSQL;
+    udAuthors: TUpdateSQL;
+    udCountries: TUpdateSQL;
+    spBooksAuthors: TStoredProc;
+    dsBooks: TDataSource;
+    dsGenres: TDataSource;
+    dsRelese: TDataSource;
+    dsPublishing: TDataSource;
+    dsAuthors: TDataSource;
+    dsCountries: TDataSource;
+    spDelete_Book: TStoredProc;
+    spDelete_Publishing: TStoredProc;
+    spDelete_Genres: TStoredProc;
+    spDelete_author: TStoredProc;
+    spDelete_Country: TStoredProc;
+    udRelese: TUpdateSQL;
+    Spdelete_Relese: TStoredProc;
+    qPublishingCODE_PUBLISHING: TIntegerField;
+    qPublishingNAME: TStringField;
+    qPublishingADDRESS: TStringField;
+    qPublishingE_MAIL: TStringField;
+    qPublishingMAIN_EDITOR: TStringField;
+    qPublishingTELEPHONE: TStringField;
+    dsSPBA: TDataSource;
+    qAuthors_: TQuery;
+    procedure dbBooksAfterConnect(Sender: TObject);
+  private
+
+    { Private declarations }
+  public
+    { Public declarations }
+     procedure FirstRelese;
+     procedure NextRelese;
+     procedure LastRelese;
+     procedure PriorRelese;
+     procedure NewRelese;
+     procedure DeleteRelese;
+     procedure EditRelese;
+     procedure CancelRelese;
+     procedure AcceptRelese;
+    procedure NewRelese1;
+   function IsFirstRelese:Boolean;
+     function IsLastRelese:Boolean;
+
+     procedure FirstBooks;
+     procedure NextBooks;
+     procedure LastBooks;
+     procedure PriorBooks;
+     procedure NewBooks;
+     procedure DeleteBooks;
+     procedure EditBooks;
+     procedure CancelBooks;
+     procedure AcceptBooks;
+
+     function IsFirstBooks:Boolean;
+     function IsLastBooks:Boolean;
+
+     procedure FirstPublishing;
+     procedure NextPublishing;
+     procedure LastPublishing;
+     procedure PriorPublishing;
+     procedure NewPublishing;
+     procedure DeletePublishing;
+     procedure EditPublishing;
+     procedure CancelPublishing;
+     procedure AcceptPublishing;
+
+     function IsFirstPublishing:Boolean;
+     function IsLastPublishing:Boolean;
+
+     procedure FirstGenres;
+     procedure NextGenres;
+     procedure LastGenres;
+     procedure PriorGenres;
+     procedure NewGenres;
+     procedure DeleteGenres;
+     procedure EditGenres;
+     procedure CancelGenres;
+     procedure AcceptGenres;
+
+     function IsFirstGenres:Boolean;
+     function IsLastGenres:Boolean;
+
+     procedure FirstAuthors;
+     procedure NextAuthors;
+     procedure LastAuthors;
+     procedure PriorAuthors;
+     procedure NewAuthors;
+     procedure DeleteAuthors;
+     procedure EditAuthors;
+     procedure CancelAuthors;
+     procedure AcceptAuthors;
+
+     function IsFirstAuthors:Boolean;
+     function IsLastAuthors:Boolean;
+
+     procedure FirstCountries;
+     procedure NextCountries;
+     procedure LastCountries;
+     procedure PriorCountries;
+     procedure NewCountries;
+     procedure DeleteCountries;
+     procedure EditCountries;
+     procedure CancelCountries;
+     procedure AcceptCountries;
+
+     function IsFirstCountries:Boolean;
+     function IsLastCountries:Boolean;
+
+     function GetAuthorsId(Name:string):integer;
+     function GetPublishingId(Name:string):integer;
+
+     procedure Logout;
+     function Login: Boolean;
+     function Connect: Boolean;
+     procedure Disconnect;
+
+
+
+  end;
+
+var
+  dmBooks: TdmBooks;
+
+implementation
+
+{$R *.dfm}
+procedure TdmBooks.AcceptAuthors;
+begin
+    dbBooks.ApplyUpdates([QAuthors]);
+    qAuthors.Close;
+    qAuthors.Open;
+end;
+
+procedure TdmBooks.AcceptBooks;
+begin
+    dbBooks.ApplyUpdates([QBooks]);
+
+end;
+
+procedure TdmBooks.AcceptCountries;
+begin
+    dbBooks.ApplyUpdates([QCountries]);
+
+end;
+
+procedure TdmBooks.AcceptGenres;
+begin
+    dbBooks.ApplyUpdates([QGenres]);
+end;
+
+procedure TdmBooks.AcceptPublishing;
+begin
+    dbBooks.ApplyUpdates([QPublishing]);
+end;
+
+procedure TdmBooks.AcceptRelese;
+begin
+     dbBooks.ApplyUpdates([QRelese]);
+end;
+
+procedure TdmBooks.CancelAuthors;
+begin
+    QAuthors.CancelUpdates;
+end;
+
+procedure TdmBooks.CancelBooks;
+begin
+     QBooks.CancelUpdates;
+end;
+
+procedure TdmBooks.CancelCountries;
+begin
+     QCountries.CancelUpdates;
+end;
+
+procedure TdmBooks.CancelGenres;
+begin
+     QGenres.CancelUpdates;
+end;
+
+procedure TdmBooks.CancelPublishing;
+begin
+    QPublishing.CancelUpdates;
+end;
+
+procedure TdmBooks.CancelRelese;
+begin
+     QRelese.CancelUpdates;
+end;
+
+function TdmBooks.Connect: Boolean;
+begin
+    try
+     dbBooks.Connected:=True;
+     qRelese.Active:=True;
+     qBooks.Active:=True;
+     qPublishing.Active:=True;
+     qGenres.Active:=True;
+     qAuthors.Active:=True;
+     qCountries.Active:=True;
+    except
+         ShowMessage('Not connected of database ');
+         dbBooks.Connected:=False;
+         Result:=False;
+   end;
+end;
+
+procedure TdmBooks.DeleteAuthors;
+begin
+    QAuthors.Delete;
+end;
+
+procedure TdmBooks.DeleteBooks;
+begin
+    QBooks.Delete;
+end;
+
+procedure TdmBooks.DeleteCountries;
+begin
+     QCountries.Delete;
+end;
+
+procedure TdmBooks.DeleteGenres;
+begin
+    QGenres.Delete;
+end;
+
+procedure TdmBooks.DeletePublishing;
+begin
+     QPublishing.Delete;
+end;
+
+procedure TdmBooks.DeleteRelese;
+begin
+     QRelese.Delete;
+end;
+
+
+
+procedure TdmBooks.Disconnect;
+begin
+    dbBooks.Connected:=False;
+end;
+
+procedure TdmBooks.EditAuthors;
+begin
+   QAuthors.Edit;
+end;
+
+procedure TdmBooks.EditBooks;
+begin
+     QBooks.Edit;
+end;
+
+procedure TdmBooks.EditCountries;
+begin
+    QCountries.Edit;
+end;
+
+procedure TdmBooks.EditGenres;
+begin
+     QGenres.Edit;
+end;
+
+procedure TdmBooks.EditPublishing;
+begin
+     QPublishing.Edit;
+end;
+
+procedure TdmBooks.EditRelese;
+begin
+     QRelese.Edit;
+end;
+
+procedure TdmBooks.FirstAuthors;
+begin
+    QAuthors.First;
+end;
+
+procedure TdmBooks.FirstBooks;
+begin
+     QBooks.First;
+end;
+
+procedure TdmBooks.FirstCountries;
+begin
+     QCountries.First;
+end;
+
+procedure TdmBooks.FirstGenres;
+begin
+    QGenres.First;
+end;
+
+procedure TdmBooks.FirstPublishing;
+begin
+    QPublishing.First;
+end;
+
+procedure TdmBooks.FirstRelese;
+begin
+     QRelese.First;
+end;
+
+function TdmBooks.GetAuthorsId(Name:string):integer;
+begin
+{    if not qAuthors.Locate('Code_authors',Name,[]) then
+          MessageDlg('Данного автора нет в БД. ',mtInformation,[mbOK],0)
+     else
+         Result:=qAuthorsCODE_AUTHORS.AsInteger;    }
+end;
+
+function TdmBooks.GetPublishingId(Name: string): integer;
+begin
+{ if not qPublishing.Locate('Code_Publ',Name,[]) then
+          MessageDlg('Данного издательства нет в БД. ',mtInformation,[mbOK],0)
+     else
+         Result:=qPublishingCODE_Publishing.AsInteger;}
+end;
+
+function TdmBooks.IsFirstAuthors: Boolean;
+begin
+   Result:=QAuthors.bof;
+end;
+
+function TdmBooks.IsFirstBooks: Boolean;
+begin
+    Result:=QBooks.bof;
+end;
+
+function TdmBooks.IsFirstCountries: Boolean;
+begin
+   Result:=QCountries.bof;
+end;
+
+function TdmBooks.IsFirstGenres: Boolean;
+begin
+    Result:=QGenres.bof;
+end;
+
+function TdmBooks.IsFirstPublishing: Boolean;
+begin
+    Result:=QPublishing.bof;
+end;
+
+function TdmBooks.IsFirstRelese: Boolean;
+begin
+     Result:=QRelese.bof;
+end;
+
+function TdmBooks.IsLastAuthors: Boolean;
+begin
+    Result:=QAuthors.eof;
+end;
+
+function TdmBooks.IsLastBooks: Boolean;
+begin
+    Result:=QBooks.eof;
+end;
+
+function TdmBooks.IsLastCountries: Boolean;
+begin
+    Result:=QCountries.eof;
+end;
+
+function TdmBooks.IsLastGenres: Boolean;
+begin
+    Result:=QGenres.eof;
+end;
+
+function TdmBooks.IsLastPublishing: Boolean;
+begin
+    Result:=QPublishing.eof;
+end;
+
+function TdmBooks.IsLastRelese: Boolean;
+begin
+     Result:=QRelese.eof;
+end;
+
+procedure TdmBooks.LastAuthors;
+begin
+     QAuthors.Last;
+end;
+
+procedure TdmBooks.LastBooks;
+begin
+     QBooks.Last;
+end;
+
+procedure TdmBooks.LastCountries;
+begin
+      QCountries.Last;
+end;
+
+procedure TdmBooks.LastGenres;
+begin
+     QGenres.Last;
+end;
+
+procedure TdmBooks.LastPublishing;
+begin
+    QPublishing.Last;
+end;
+
+procedure TdmBooks.LastRelese;
+begin
+    QRelese.Last;
+end;
+
+function TdmBooks.Login: Boolean;
+begin
+    Result:=Connect;
+end;
+
+procedure TdmBooks.Logout;
+begin
+   Disconnect;
+end;
+
+procedure TdmBooks.NewAuthors;
+begin
+    QAuthors.Insert;
+end;
+
+procedure TdmBooks.NewBooks;
+begin
+    QBooks.Insert;
+end;
+
+procedure TdmBooks.NewCountries;
+begin
+     QCountries.Insert;
+end;
+
+procedure TdmBooks.NewGenres;
+begin
+     QGenres.Insert;
+end;
+
+procedure TdmBooks.NewPublishing;
+begin
+    QPublishing.Insert;
+end;
+
+procedure TdmBooks.NewRelese;
+{var
+  Code_Book,Code_Publ,Code_Authors:integer;
+  Code_relese,Name_Book,Counts,Name_Publ,Date_Relese,Surname:string;
+ }
+begin
+{
+Name:='';
+     if InputQuery('Search Code_relese','Введите код выпуска', Code_relese)
+       then
+          if  qAuthors.Locate('Code_relese',Code_relese,[]) then
+           MessageDlg('Выпуск с таким кодом существует. ',mtError,[mbOK],0)
+            else
+             if InputQuery('Search Name_Publ','Введите название издательства', Name_Publ) then
+               if not qAuthors.Locate('Name_Publ',Name_Publ,[]) then
+                  MessageDlg('Введите издательство. ',mtInformation,[mbOK],0)
+               else
+                   if InputQuery('Search Surname','Введите фамилию автора', Surname) then
+                   if InputQuery('Search Name Book','Введите название книги', Name_Book) then
+                   if InputQuery('Search Counts','Введите количество экземпляров', Counts) then
+                   if InputQuery('Search Date_Relese','Введите дату Выпуска', Date_Relese) then
+        Code_Publ:=GetPublishingId(Name_Publ);
+        Code_Authors:=GetAuthorsId(Surname);
+{        try
+             with spCode_Books   do
+               begin
+                   ParamByName('INAME').Asstring:=Name_Book;
+                   ParamByName('ICODE_AUTHORS').AsInteger:=Code_Authors;
+                   ExecProc;
+                   Code_Book:=ParamByName('OCODE_BOOK').AsInteger;
+               end;
+        except
+                  MessageDlg('Такая книга у данного автора не существует',mtInformation,[mbOK],0)
+        end;}
+//        dbBooks.StartTransaction;
+
+         //начало транзакции
+//                dbBooks.StartTransaction;
+{
+   try
+      with spCode_Books   do
+      begin
+        ParamByName('Code_relese').Asstring:=Code_relese;
+        ParamByName('Name_Book').Asstring:=Name_Book;
+        ParamByName('Counts').Asstring:=Counts;
+        ParamByName('Name_Publ').Asstring:=Name_Publ;
+        ParamByName('Сode_Book').Asinteger:=Сode_Book;
+        ParamByName('Code_Publ').Asinteger:=Code_Publ;
+        ExecProc;
+        end;
+        // подтверждаем внесенные изменения
+        dbBooks.Commit;
+
+        // при неудаче отменяем транзакцию
+        except
+        dbBooks.Rollback;
+}
+end;
+
+procedure TdmBooks.NewRelese1;
+{var
+  Code_Book,Code_Publ:integer;
+  Code_relese,Counts,Date_Relese:string;}
+
+begin
+{
+     if InputQuery('Search Code_relese','Введите код выпуска', Code_relese)
+       then
+          if  qRelese.Locate('Code_relese',Code_relese,[]) then
+           MessageDlg('Выпуск с таким кодом существует. ',mtError,[mbOK],0)
+            else
+                   if InputQuery('Search Counts','Введите количество экземпляров', Counts) then
+                   if InputQuery('Search Date_Relese','Введите дату Выпуска', Date_Relese) then
+        code_Book:=qBooks.FieldValues['Code_Book'];
+        Code_Publ:=qPublishing.FieldValues['Code_Publ'];
+        dbBooks.StartTransaction;
+
+         //начало транзакции
+                dbBooks.StartTransaction;
+{
+   try
+      with spCode_Books   do
+      begin
+        ParamByName('Code_relese').Asstring:=Code_relese;
+        ParamByName('Name_Book').Asstring:=Name_Book;
+        ParamByName('Counts').Asstring:=Counts;
+        ParamByName('Name_Publ').Asstring:=Name_Publ;
+        ParamByName('Сode_Book').Asinteger:=Сode_Book;
+        ParamByName('Code_Publ').Asinteger:=Code_Publ;
+        ExecProc;
+        end;
+        // подтверждаем внесенные изменения
+        dbBooks.Commit;
+
+        // при неудаче отменяем транзакцию
+        except
+        dbBooks.Rollback;
+}
+
+end;
+
+procedure TdmBooks.NextAuthors;
+begin
+    QAuthors.Next;
+end;
+
+procedure TdmBooks.NextBooks;
+begin
+    QBooks.Next;
+end;
+
+procedure TdmBooks.NextCountries;
+begin
+    QCountries.Next;
+end;
+
+procedure TdmBooks.NextGenres;
+begin
+     QGenres.Next;
+end;
+
+procedure TdmBooks.NextPublishing;
+begin
+    QPublishing.Next;
+end;
+
+procedure TdmBooks.NextRelese;
+begin
+    QRelese.Next;
+end;
+
+procedure TdmBooks.PriorAuthors;
+begin
+    QAuthors.Prior;
+end;
+
+procedure TdmBooks.PriorBooks;
+begin
+    QBooks.Prior;
+end;
+
+procedure TdmBooks.PriorCountries;
+begin
+     QCountries.Prior;
+end;
+
+procedure TdmBooks.PriorGenres;
+begin
+     QGenres.Prior;
+end;
+
+procedure TdmBooks.PriorPublishing;
+begin
+     QPublishing.Prior;
+end;
+
+procedure TdmBooks.PriorRelese;
+begin
+   QRelese.Prior;
+end;
+
+procedure TdmBooks.dbBooksAfterConnect(Sender: TObject);
+begin
+  showmessage('Connected');
+end;
+
+end.

@@ -1,0 +1,17 @@
+program proIzd;
+
+uses
+  Forms,
+  unMain in 'unMain.pas' {frmMian},
+  unDM in 'unDM.pas' {DM: TDataModule},
+  unConnect in 'unConnect.pas' {frmConnect};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.CreateForm(TfrmMian, frmMian);
+  Application.CreateForm(TDM, DM);
+  Application.CreateForm(TfrmConnect, frmConnect);
+  Application.Run;
+end.

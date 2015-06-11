@@ -1,0 +1,55 @@
+unit unStadions;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, Menus, DBCtrls, StdCtrls, Grids, DBGrids;
+
+type
+  TfmStadions = class(TForm)
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    gStadiums: TDBGrid;
+    bResult: TButton;
+    dblcCountry: TDBLookupComboBox;
+    mmStadions: TMainMenu;
+    Exit1: TMenuItem;
+    gTeams: TDBGrid;
+    Label5: TLabel;
+    gStad_by_mark: TDBGrid;
+    eMark: TEdit;
+    Label6: TLabel;
+    procedure Exit1Click(Sender: TObject);
+    procedure bResultClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  fmStadions: TfmStadions;
+
+implementation
+uses unDMFootb;
+{$R *.dfm}
+
+procedure TfmStadions.Exit1Click(Sender: TObject);
+begin
+ close;
+end;
+
+procedure TfmStadions.bResultClick(Sender: TObject);
+begin
+ with FootbDM do
+  begin
+     qStad_by_mark.Close;
+     qStad_by_mark.ParamByName('mark').AsString:=emark.text;
+     qStad_by_mark.Open;
+  end;
+end;
+
+end.

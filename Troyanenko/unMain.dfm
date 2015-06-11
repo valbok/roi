@@ -1,0 +1,164 @@
+object frmMain: TfrmMain
+  Left = 253
+  Top = 219
+  BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = bsSingle
+  Caption = 'Atel`e'
+  ClientHeight = 173
+  ClientWidth = 141
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  Menu = MainMenu
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object pnlmain: TPanel
+    Left = 0
+    Top = 0
+    Width = 141
+    Height = 173
+    Align = alClient
+    BevelInner = bvLowered
+    BevelOuter = bvLowered
+    BorderWidth = 2
+    TabOrder = 0
+    object pnlMain2: TPanel
+      Left = 4
+      Top = 4
+      Width = 133
+      Height = 165
+      Align = alClient
+      BevelInner = bvLowered
+      BevelOuter = bvLowered
+      BorderWidth = 1
+      BorderStyle = bsSingle
+      Color = clSkyBlue
+      Ctl3D = False
+      ParentCtl3D = False
+      TabOrder = 0
+      object Bevel1: TBevel
+        Left = 8
+        Top = 4
+        Width = 117
+        Height = 152
+        Style = bsRaised
+      end
+      object sbIzdeliya: TSpeedButton
+        Left = 16
+        Top = 128
+        Width = 101
+        Height = 22
+        Caption = 'Izdeliya'
+        Enabled = False
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        OnClick = sbIzdeliyaClick
+      end
+      object sbTkani: TSpeedButton
+        Left = 16
+        Top = 8
+        Width = 101
+        Height = 22
+        Caption = 'Tkani'
+        Enabled = False
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        OnClick = sbTkaniClick
+      end
+      object sbVidi: TSpeedButton
+        Left = 16
+        Top = 32
+        Width = 101
+        Height = 22
+        BiDiMode = bdLeftToRight
+        Caption = 'Kind tkani'
+        Enabled = False
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        ParentBiDiMode = False
+        OnClick = sbVidiClick
+      end
+      object sbZakazchiki: TSpeedButton
+        Left = 16
+        Top = 104
+        Width = 101
+        Height = 22
+        Caption = 'Zakazchiki'
+        Enabled = False
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        OnClick = sbZakazchikiClick
+      end
+      object sbRask: TSpeedButton
+        Left = 16
+        Top = 56
+        Width = 101
+        Height = 22
+        Caption = 'Rashod tkani'
+        Enabled = False
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        OnClick = sbRaskClick
+      end
+      object sbZakazi: TSpeedButton
+        Left = 16
+        Top = 80
+        Width = 101
+        Height = 22
+        Caption = 'Zakazi'
+        Enabled = False
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        OnClick = sbZakaziClick
+      end
+    end
+  end
+  object MainMenu: TMainMenu
+    Left = 88
+    Top = 8
+    object miService: TMenuItem
+      Caption = '&Service'
+      object miConnect: TMenuItem
+        Caption = 'Connect'
+        OnClick = miConnectClick
+      end
+      object miDisconnect: TMenuItem
+        Caption = 'Disconnect'
+        Enabled = False
+        OnClick = miDisconnectClick
+      end
+      object N1: TMenuItem
+        Caption = 'Exit'
+        OnClick = N1Click
+      end
+    end
+  end
+end

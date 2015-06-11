@@ -1,0 +1,165 @@
+unit unMainForm;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, DBCtrls, Menus, ExtCtrls,
+  unChildForm, unDMFootb,unLogin;
+type
+  TForm1 = class(TForm)
+    Panel1: TPanel;
+    BCity: TButton;
+    BCountry: TButton;
+    BPlayer: TButton;
+    BPost: TButton;
+    BStadium: TButton;
+    BStaff: TButton;
+    BTeam: TButton;
+    BTransfer: TButton;
+    mmMainMenu: TMainMenu;
+    User1: TMenuItem;
+    mmiLogin: TMenuItem;
+    mmiLogout: TMenuItem;
+    Exit1: TMenuItem;
+    Label1: TLabel;
+    Panel2: TPanel;
+    Label2: TLabel;
+    Panel3: TPanel;
+    BLegioner: TButton;
+    BStadiums: TButton;
+    procedure BCityClick(Sender: TObject);
+    procedure BCountryClick(Sender: TObject);
+    procedure BPlayerClick(Sender: TObject);
+    procedure BPostClick(Sender: TObject);
+    procedure BStadiumClick(Sender: TObject);
+    procedure BStaffClick(Sender: TObject);
+    procedure BTeamClick(Sender: TObject);
+    procedure BTransferClick(Sender: TObject);
+    procedure Exit1Click(Sender: TObject);
+    procedure mmiLoginClick(Sender: TObject);
+    procedure mmiLogoutClick(Sender: TObject);
+    procedure BLegionerClick(Sender: TObject);
+    procedure BStadiumsClick(Sender: TObject);
+    procedure Button11Click(Sender: TObject);
+    procedure SetBTn(value:boolean);    
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+uses unCountries, unPlayers, unPosts, unStadiums, unStaff, unTeams,
+  unTransfer, unCity, unLegioners, unStadions, unPersonal;
+
+
+{$R *.dfm}
+
+{ TForm1 }
+
+
+procedure TForm1.BCityClick(Sender: TObject);
+begin
+  fmCity.Show;
+end;
+
+procedure TForm1.BCountryClick(Sender: TObject);
+begin
+  fmCountry.Show;
+end;
+
+procedure TForm1.BPlayerClick(Sender: TObject);
+begin
+  fmPlayers.Show;
+end;
+
+procedure TForm1.BPostClick(Sender: TObject);
+begin
+  fmPosts.Show;
+end;
+
+procedure TForm1.BStadiumClick(Sender: TObject);
+begin
+  fmStadiums.Show;
+end;
+
+procedure TForm1.BStaffClick(Sender: TObject);
+begin
+  fmStaff.Show;
+end;
+
+procedure TForm1.BTeamClick(Sender: TObject);
+begin
+  fmTeams.Show;
+end;
+
+procedure TForm1.BTransferClick(Sender: TObject);
+begin
+  fmTransfer.Show;
+end;
+
+procedure TForm1.Exit1Click(Sender: TObject);
+begin
+  Form1.Close;
+end;
+
+procedure TForm1.mmiLoginClick(Sender: TObject);
+var st:TStrings;
+begin
+ st:=TStrings.create;
+ GetLoginParams(st,FootbDM.FootbDB);
+ if FootbDM.login then
+      begin
+          mmiLogin.Enabled:=False;
+          mmiLogout.Enabled:=True;
+      end;
+end;
+procedure TForm1.SetBTn(value:boolean);
+begin
+  Bcity.Enabled:=value;
+  BStadium.Enabled:=value;
+  BCountry.Enabled:=value;
+  BPlayer.Enabled:=value;
+  BPost.Enabled:=value;
+  BStaff.Enabled:=value;
+  BTeam.Enabled:=value;
+  BTransfer.Enabled:=value;
+  BLegioner.Enabled:=value;
+  BStadiums.Enabled:=value;
+//  Button11.Enabled:=value;
+end;
+procedure TForm1.mmiLogoutClick(Sender: TObject);
+begin
+  mmiLogin.Enabled:=True;
+  mmiLogout.Enabled:=False;
+  FootbDM.Logout;
+end;
+
+procedure TForm1.BLegionerClick(Sender: TObject);
+begin
+ if not  FootbDM.qCLeg_by_stad.active then FootbDM.qCLeg_by_stad.Open;
+ if not  FootbDM.qL_by_s.active then FootbDM.qL_by_s.Open;
+  fmLegioners.Show;
+end;
+
+procedure TForm1.BStadiumsClick(Sender: TObject);
+begin
+ if not  FootbDM.qS_by_Strana.active then FootbDM.qS_by_Strana.Open;
+ if not  FootbDM.qT_by_Stad.active then FootbDM.qT_by_Stad.Open;
+ if not  FootbDM.qCountries.active then FootbDM.qCountries.Open;
+ fmStadions.Show;
+end;
+
+procedure TForm1.Button11Click(Sender: TObject);
+begin
+ fmPersonal.Show;
+end;
+
+end.
+

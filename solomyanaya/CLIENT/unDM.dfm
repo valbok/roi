@@ -1,0 +1,578 @@
+object DM: TDM
+  OldCreateOrder = False
+  Left = 95
+  Top = 95
+  Height = 313
+  Width = 635
+  object Database: TDatabase
+    DatabaseName = 'dbSolo'
+    DriverName = 'INTRBASE'
+    LoginPrompt = False
+    Params.Strings = (
+      'SERVER NAME=d:\users\SOLOMYANAYA.GDB'
+      'USER NAME=admin'
+      'OPEN MODE=READ/WRITE'
+      'SCHEMA CACHE SIZE=8'
+      'LANGDRIVER='
+      'SQLQRYMODE='
+      'SQLPASSTHRU MODE=SHARED AUTOCOMMIT'
+      'SCHEMA CACHE TIME=-1'
+      'MAX ROWS=-1'
+      'BATCH COUNT=200'
+      'ENABLE SCHEMA CACHE=FALSE'
+      'SCHEMA CACHE DIR='
+      'ENABLE BCD=FALSE'
+      'BLOBS TO CACHE=64'
+      'BLOB SIZE=32'
+      'WAIT ON LOCKS=FALSE'
+      'COMMIT RETAIN=FALSE'
+      'ROLE NAME='
+      'PASSWORD=1')
+    SessionName = 'Default'
+    AfterConnect = DatabaseAfterConnect
+    AfterDisconnect = DatabaseAfterDisconnect
+    Left = 104
+    Top = 24
+  end
+  object qAll_izdeliya: TQuery
+    CachedUpdates = True
+    DatabaseName = 'dbSolo'
+    SQL.Strings = (
+      'select * from all_izdeliya'
+      'order by name')
+    UpdateObject = usqAll_izdeiya
+    Left = 32
+    Top = 88
+    object qAll_izdeliyaID: TIntegerField
+      DisplayLabel = #1050#1086#1076
+      DisplayWidth = 5
+      FieldName = 'ID'
+      Origin = 'DBSOLO.ALL_IZDELIYA.ID'
+    end
+    object qAll_izdeliyaNAME: TStringField
+      DisplayLabel = #1053#1072#1079#1074#1072#1085#1080#1077
+      DisplayWidth = 20
+      FieldName = 'NAME'
+      Origin = 'DBSOLO.ALL_IZDELIYA.NAME'
+      Size = 50
+    end
+    object qAll_izdeliyaluProm: TStringField
+      DisplayLabel = #1055#1088#1086#1084#1099#1089#1077#1083
+      DisplayWidth = 20
+      FieldKind = fkLookup
+      FieldName = 'luProm'
+      LookupDataSet = qAll_promisli
+      LookupKeyFields = 'ID'
+      LookupResultField = 'NAME'
+      KeyFields = 'PROMISEL_ID'
+      Size = 35
+      Lookup = True
+    end
+    object qAll_izdeliyaLUMAster: TStringField
+      DisplayLabel = #1052#1072#1089#1090#1077#1088' ('#1092#1072#1084#1080#1083#1080#1103')'
+      FieldKind = fkLookup
+      FieldName = 'LUMAster'
+      LookupDataSet = qAll_mastera
+      LookupKeyFields = 'ID'
+      LookupResultField = 'FAM'
+      KeyFields = 'MASTER_ID'
+      Size = 35
+      Lookup = True
+    end
+    object qAll_izdeliyaPROMISEL_ID: TIntegerField
+      FieldName = 'PROMISEL_ID'
+      Origin = 'DBSOLO.ALL_IZDELIYA.PROMISEL_ID'
+      Visible = False
+    end
+    object qAll_izdeliyaMASTER_ID: TIntegerField
+      FieldName = 'MASTER_ID'
+      Origin = 'DBSOLO.ALL_IZDELIYA.MASTER_ID'
+      Visible = False
+    end
+  end
+  object qAll_kvalifik: TQuery
+    CachedUpdates = True
+    DatabaseName = 'dbSolo'
+    SQL.Strings = (
+      'select * from kvalifikacii'
+      'order by name')
+    UpdateObject = usqAll_kvalifik
+    Left = 32
+    Top = 136
+    object qAll_kvalifikID: TIntegerField
+      DisplayLabel = #1050#1086#1076
+      DisplayWidth = 5
+      FieldName = 'ID'
+      Origin = 'DBSOLO.KVALIFIKACII.ID'
+    end
+    object qAll_kvalifikNAME: TStringField
+      DisplayLabel = #1053#1072#1079#1074#1072#1085#1080#1077
+      DisplayWidth = 20
+      FieldName = 'NAME'
+      Origin = 'DBSOLO.KVALIFIKACII.NAME'
+      Size = 50
+    end
+  end
+  object qAll_mastera: TQuery
+    CachedUpdates = True
+    DatabaseName = 'dbSolo'
+    SQL.Strings = (
+      'select * from all_mastera'
+      'order by fam')
+    UpdateObject = usqAll_mastera
+    Left = 32
+    Top = 184
+    object qAll_masteraID: TIntegerField
+      DisplayLabel = #1050#1086#1076
+      DisplayWidth = 5
+      FieldName = 'ID'
+      Origin = 'DBSOLO.ALL_MASTERA.ID'
+    end
+    object qAll_masteraFAM: TStringField
+      DisplayLabel = #1060#1072#1084#1080#1083#1080#1103
+      DisplayWidth = 20
+      FieldName = 'FAM'
+      Origin = 'DBSOLO.ALL_MASTERA.FAM'
+      Size = 50
+    end
+    object qAll_masteraNAME: TStringField
+      DisplayLabel = #1048#1084#1103
+      DisplayWidth = 20
+      FieldName = 'NAME'
+      Origin = 'DBSOLO.ALL_MASTERA.NAME'
+      Size = 50
+    end
+    object qAll_masteraOTCH: TStringField
+      DisplayLabel = #1054#1090#1095#1077#1089#1090#1074#1086
+      DisplayWidth = 25
+      FieldName = 'OTCH'
+      Origin = 'DBSOLO.ALL_MASTERA.OTCH'
+      Size = 50
+    end
+    object qAll_masteraADDRESS: TStringField
+      DisplayLabel = #1040#1076#1088#1077#1089
+      DisplayWidth = 25
+      FieldName = 'ADDRESS'
+      Origin = 'DBSOLO.ALL_MASTERA.ADDRESS'
+      Size = 200
+    end
+    object qAll_masteraDAT: TDateTimeField
+      DisplayLabel = #1044#1072#1090#1072' '#1088#1086#1078#1076#1077#1085#1080#1103
+      FieldName = 'DAT'
+      Origin = 'DBSOLO.ALL_MASTERA.DAT'
+    end
+    object qAll_masteraKVALIFIK_ID: TIntegerField
+      FieldName = 'KVALIFIK_ID'
+      Origin = 'DBSOLO.ALL_MASTERA.KVALIFIK_ID'
+      Visible = False
+    end
+    object qAll_masteraLUkval: TStringField
+      DisplayLabel = #1050#1074#1072#1083#1080#1092#1080#1082#1072#1094#1080#1103
+      FieldKind = fkLookup
+      FieldName = 'LUkval'
+      LookupDataSet = qAll_kvalifik
+      LookupKeyFields = 'ID'
+      LookupResultField = 'NAME'
+      KeyFields = 'KVALIFIK_ID'
+      Size = 35
+      Lookup = True
+    end
+  end
+  object qAll_promisli: TQuery
+    CachedUpdates = True
+    DatabaseName = 'dbSolo'
+    SQL.Strings = (
+      'select * from promisli'
+      'order by name')
+    UpdateObject = usqAll_promisli
+    Left = 32
+    Top = 232
+    object qAll_promisliID: TIntegerField
+      DisplayLabel = #1050#1086#1076
+      DisplayWidth = 5
+      FieldName = 'ID'
+      Origin = 'DBSOLO.PROMISLI.ID'
+    end
+    object qAll_promisliNAME: TStringField
+      DisplayLabel = #1053#1072#1079#1074#1072#1085#1080#1077
+      DisplayWidth = 20
+      FieldName = 'NAME'
+      Origin = 'DBSOLO.PROMISLI.NAME'
+      Size = 50
+    end
+  end
+  object usqAll_izdeiya: TUpdateSQL
+    ModifySQL.Strings = (
+      'update izdeliya'
+      'set'
+      '  NAME = :NAME,'
+      '  PROMISEL_ID = :PROMISEL_ID,'
+      '  MASTER_ID = :MASTER_ID'
+      'where'
+      '  ID = :OLD_ID')
+    InsertSQL.Strings = (
+      'insert into izdeliya'
+      '  (NAME, PROMISEL_ID, MASTER_ID)'
+      'values'
+      '  (:NAME, :PROMISEL_ID, :MASTER_ID)')
+    DeleteSQL.Strings = (
+      'delete from izdeliya'
+      'where'
+      '  ID = :OLD_ID')
+    Left = 200
+    Top = 88
+  end
+  object usqAll_kvalifik: TUpdateSQL
+    ModifySQL.Strings = (
+      'update kvalifikacii'
+      'set'
+      '  NAME = :NAME'
+      'where'
+      '  ID = :OLD_ID')
+    InsertSQL.Strings = (
+      'insert into kvalifikacii'
+      '  (NAME)'
+      'values'
+      '  (:NAME)')
+    DeleteSQL.Strings = (
+      'delete from kvalifikacii'
+      'where'
+      '  ID = :OLD_ID')
+    Left = 200
+    Top = 136
+  end
+  object usqAll_mastera: TUpdateSQL
+    ModifySQL.Strings = (
+      'update all_mastera'
+      'set'
+      '  FAM = :FAM,'
+      '  NAME = :NAME,'
+      '  OTCH = :OTCH,'
+      '  ADDRESS = :ADDRESS,'
+      '  DAT = :DAT,'
+      '  KVALIFIK_ID = :KVALIFIK_ID'
+      'where'
+      '  ID = :OLD_ID')
+    InsertSQL.Strings = (
+      'insert into all_mastera'
+      '  (FAM, NAME, OTCH, ADDRESS, DAT, KVALIFIK_ID)'
+      'values'
+      '  (:FAM, :NAME, :OTCH, :ADDRESS, :DAT, :KVALIFIK_ID)')
+    DeleteSQL.Strings = (
+      'delete from all_mastera'
+      'where'
+      '  ID = :OLD_ID')
+    Left = 200
+    Top = 184
+  end
+  object usqAll_promisli: TUpdateSQL
+    ModifySQL.Strings = (
+      'update promisli'
+      'set'
+      '  NAME = :NAME'
+      'where'
+      '  ID = :OLD_ID')
+    InsertSQL.Strings = (
+      'insert into promisli'
+      '  (NAME)'
+      'values'
+      '  (:NAME)')
+    DeleteSQL.Strings = (
+      'delete from promisli'
+      'where'
+      '  ID = :OLD_ID')
+    Left = 200
+    Top = 232
+  end
+  object dsQall_izdeliya: TDataSource
+    DataSet = qAll_izdeliya
+    Left = 112
+    Top = 88
+  end
+  object dsQAll_kvalifik: TDataSource
+    DataSet = qAll_kvalifik
+    Left = 112
+    Top = 136
+  end
+  object dsQAll_mastera: TDataSource
+    DataSet = qAll_mastera
+    Left = 112
+    Top = 184
+  end
+  object dsQAll_promisli: TDataSource
+    DataSet = qAll_promisli
+    Left = 112
+    Top = 232
+  end
+  object spDElete_izdelie: TStoredProc
+    DatabaseName = 'dbSolo'
+    StoredProcName = 'DELETE_IZDELIE'
+    Left = 288
+    Top = 88
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'IIZDELIE_ID'
+        ParamType = ptInput
+      end>
+  end
+  object spDelete_master: TStoredProc
+    DatabaseName = 'dbSolo'
+    StoredProcName = 'DELETE_MASTER'
+    Left = 288
+    Top = 184
+  end
+  object spDelete_promisel: TStoredProc
+    DatabaseName = 'dbSolo'
+    StoredProcName = 'DELETE_PROMISEL'
+    Left = 288
+    Top = 232
+    ParamData = <
+      item
+        DataType = ftString
+        Name = 'IPROMISEL_NAME'
+        ParamType = ptInput
+      end>
+  end
+  object spDelete_kvalifik: TStoredProc
+    DatabaseName = 'dbSolo'
+    StoredProcName = 'DELETE_KVALIFIK'
+    Left = 288
+    Top = 136
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'IKVALIFIK_ID'
+        ParamType = ptInput
+      end>
+  end
+  object qIzdeliya_by_promisel: TQuery
+    CachedUpdates = True
+    DatabaseName = 'dbSolo'
+    DataSource = dsQAll_promisli
+    SQL.Strings = (
+      'select * from izdeliya'
+      'where promisel_id=:id')
+    UpdateObject = usQi_by_p
+    Left = 408
+    Top = 120
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'ID'
+        ParamType = ptUnknown
+        Size = 4
+      end>
+    object qIzdeliya_by_promiselID: TIntegerField
+      DisplayLabel = #1050#1086#1076
+      DisplayWidth = 5
+      FieldName = 'ID'
+      Origin = 'DBSOLO.IZDELIYA.ID'
+    end
+    object qIzdeliya_by_promiselNAME: TStringField
+      DisplayLabel = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+      DisplayWidth = 20
+      FieldName = 'NAME'
+      Origin = 'DBSOLO.IZDELIYA.NAME'
+      Size = 50
+    end
+    object qIzdeliya_by_promiselPROMISEL_ID: TIntegerField
+      DisplayLabel = #1050#1086#1076' '#1087#1088#1086#1084#1099#1089#1083#1072
+      DisplayWidth = 5
+      FieldName = 'PROMISEL_ID'
+      Origin = 'DBSOLO.IZDELIYA.PROMISEL_ID'
+    end
+    object qIzdeliya_by_promiselMASTER_ID: TIntegerField
+      DisplayLabel = #1050#1086#1076' '#1084#1072#1089#1077#1090#1088#1072
+      DisplayWidth = 5
+      FieldName = 'MASTER_ID'
+      Origin = 'DBSOLO.IZDELIYA.MASTER_ID'
+    end
+  end
+  object qMastera_by_kvalifik: TQuery
+    CachedUpdates = True
+    DatabaseName = 'dbSolo'
+    DataSource = dsQAll_kvalifik
+    SQL.Strings = (
+      'select * from mastera '
+      'where kvalifik_id=:id')
+    UpdateObject = usM_by_k
+    Left = 408
+    Top = 8
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'ID'
+        ParamType = ptUnknown
+        Size = 4
+      end>
+    object qMastera_by_kvalifikID: TIntegerField
+      DisplayLabel = #1050#1086#1076
+      DisplayWidth = 5
+      FieldName = 'ID'
+      Origin = 'DBSOLO.MASTERA.ID'
+    end
+    object qMastera_by_kvalifikFAM: TStringField
+      DisplayLabel = #1060#1072#1084#1080#1083#1080#1103
+      DisplayWidth = 20
+      FieldName = 'FAM'
+      Origin = 'DBSOLO.MASTERA.FAM'
+      Size = 50
+    end
+    object qMastera_by_kvalifikNAME: TStringField
+      DisplayLabel = #1048#1084#1103
+      DisplayWidth = 20
+      FieldName = 'NAME'
+      Origin = 'DBSOLO.MASTERA.NAME'
+      Size = 50
+    end
+    object qMastera_by_kvalifikOTCH: TStringField
+      DisplayLabel = #1054#1090#1095#1077#1089#1090#1074#1086
+      DisplayWidth = 20
+      FieldName = 'OTCH'
+      Origin = 'DBSOLO.MASTERA.OTCH'
+      Size = 50
+    end
+    object qMastera_by_kvalifikADDRESS: TStringField
+      DisplayLabel = #1040#1076#1088#1077#1089
+      DisplayWidth = 20
+      FieldName = 'ADDRESS'
+      Origin = 'DBSOLO.MASTERA.ADDRESS'
+      Size = 200
+    end
+    object qMastera_by_kvalifikDAT: TDateTimeField
+      DisplayLabel = #1044#1072#1090#1072' '#1088#1086#1078#1076#1077#1085#1080#1103
+      FieldName = 'DAT'
+      Origin = 'DBSOLO.MASTERA.DAT'
+    end
+    object qMastera_by_kvalifikKVALIFIK_ID: TIntegerField
+      DisplayLabel = #1050#1086#1076' '#1082#1074#1072#1083#1080#1092#1080#1082#1072#1094#1080#1080
+      FieldName = 'KVALIFIK_ID'
+      Origin = 'DBSOLO.MASTERA.KVALIFIK_ID'
+    end
+  end
+  object qIzdeliya_by_master: TQuery
+    CachedUpdates = True
+    DatabaseName = 'dbSolo'
+    DataSource = dsQAll_mastera
+    SQL.Strings = (
+      'select * from izdeliya'
+      'where master_id=:id')
+    UpdateObject = usqI_by_m
+    Left = 400
+    Top = 64
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'ID'
+        ParamType = ptUnknown
+        Size = 4
+      end>
+    object qIzdeliya_by_masterID: TIntegerField
+      DisplayLabel = #1050#1086#1076
+      DisplayWidth = 5
+      FieldName = 'ID'
+      Origin = 'DBSOLO.IZDELIYA.ID'
+    end
+    object qIzdeliya_by_masterNAME: TStringField
+      DisplayLabel = #1053#1072#1079#1074#1072#1085#1080#1077
+      DisplayWidth = 20
+      FieldName = 'NAME'
+      Origin = 'DBSOLO.IZDELIYA.NAME'
+      Size = 50
+    end
+    object qIzdeliya_by_masterPROMISEL_ID: TIntegerField
+      DisplayLabel = #1050#1086#1076' '#1087#1088#1086#1084#1099#1089#1083#1072
+      DisplayWidth = 5
+      FieldName = 'PROMISEL_ID'
+      Origin = 'DBSOLO.IZDELIYA.PROMISEL_ID'
+    end
+    object qIzdeliya_by_masterMASTER_ID: TIntegerField
+      DisplayLabel = #1050#1086#1076' '#1084#1072#1089#1090#1077#1088#1072
+      DisplayWidth = 5
+      FieldName = 'MASTER_ID'
+      Origin = 'DBSOLO.IZDELIYA.MASTER_ID'
+    end
+  end
+  object dsqIzdeliya_by_master: TDataSource
+    DataSet = qIzdeliya_by_master
+    Left = 480
+    Top = 80
+  end
+  object dsqMastera_by_kvalifik: TDataSource
+    DataSet = qMastera_by_kvalifik
+    Left = 488
+    Top = 24
+  end
+  object dsqIzdeliya_by_promisel: TDataSource
+    DataSet = qIzdeliya_by_promisel
+    Left = 496
+    Top = 128
+  end
+  object usQi_by_p: TUpdateSQL
+    ModifySQL.Strings = (
+      'update izdeliya'
+      'set'
+      '  NAME = :NAME,'
+      '  PROMISEL_ID = :PROMISEL_ID,'
+      '  MASTER_ID = :MASTER_ID'
+      'where'
+      '  ID = :OLD_ID')
+    InsertSQL.Strings = (
+      'insert into izdeliya'
+      '  (NAME, PROMISEL_ID, MASTER_ID)'
+      'values'
+      '  (:NAME, :PROMISEL_ID, :MASTER_ID)')
+    DeleteSQL.Strings = (
+      'delete from izdeliya'
+      'where'
+      '  ID = :OLD_ID')
+    Left = 568
+    Top = 128
+  end
+  object usqI_by_m: TUpdateSQL
+    ModifySQL.Strings = (
+      'update izdeliya'
+      'set'
+      '  NAME = :NAME,'
+      '  PROMISEL_ID = :PROMISEL_ID,'
+      '  MASTER_ID = :MASTER_ID'
+      'where'
+      '  ID = :OLD_ID')
+    InsertSQL.Strings = (
+      'insert into izdeliya'
+      '  (NAME, PROMISEL_ID, MASTER_ID)'
+      'values'
+      '  (:NAME, :PROMISEL_ID, :MASTER_ID)')
+    DeleteSQL.Strings = (
+      'delete from izdeliya'
+      'where'
+      '  ID = :OLD_ID')
+    Left = 552
+    Top = 72
+  end
+  object usM_by_k: TUpdateSQL
+    ModifySQL.Strings = (
+      'update mastera'
+      'set'
+      '  FAM = :FAM,'
+      '  NAME = :NAME,'
+      '  OTCH = :OTCH,'
+      '  ADDRESS = :ADDRESS,'
+      '  DAT = :DAT,'
+      '  KVALIFIK_ID = :KVALIFIK_ID'
+      'where'
+      '  ID = :OLD_ID')
+    InsertSQL.Strings = (
+      'insert into mastera'
+      '  (FAM, NAME, OTCH, ADDRESS, DAT, KVALIFIK_ID)'
+      'values'
+      '  (:FAM, :NAME, :OTCH, :ADDRESS, :DAT, :KVALIFIK_ID)')
+    DeleteSQL.Strings = (
+      'delete from mastera'
+      'where'
+      '  ID = :OLD_ID')
+    Left = 560
+    Top = 8
+  end
+end

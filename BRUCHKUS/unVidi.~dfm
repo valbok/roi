@@ -1,0 +1,92 @@
+object frmEditVidi: TfrmEditVidi
+  Left = 192
+  Top = 119
+  Width = 378
+  Height = 375
+  Caption = #1042#1080#1076#1099' '#1080#1079#1076#1077#1083#1080#1081
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = False
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Splitter1: TSplitter
+    Left = 156
+    Top = 0
+    Width = 5
+    Height = 348
+    Cursor = crHSplit
+    Align = alRight
+  end
+  object pnlMaini: TPanel
+    Left = 161
+    Top = 0
+    Width = 209
+    Height = 348
+    Align = alRight
+    BevelInner = bvLowered
+    BevelOuter = bvLowered
+    BevelWidth = 2
+    BorderWidth = 2
+    BorderStyle = bsSingle
+    TabOrder = 0
+    object pnlMain2i: TPanel
+      Left = 6
+      Top = 6
+      Width = 193
+      Height = 332
+      Align = alClient
+      BevelInner = bvRaised
+      BorderWidth = 3
+      TabOrder = 0
+      object Label1: TLabel
+        Left = 8
+        Top = 8
+        Width = 48
+        Height = 13
+        Caption = #1082#1086#1076' '#1074#1080#1076#1072':'
+      end
+      object Label2: TLabel
+        Left = 8
+        Top = 32
+        Width = 25
+        Height = 13
+        Caption = #1048#1084#1103':'
+      end
+      object Bevel1: TBevel
+        Left = 176
+        Top = 8
+        Width = 15
+        Height = 47
+        Shape = bsLeftLine
+      end
+      object dbeID: TDBEdit
+        Left = 136
+        Top = 8
+        Width = 33
+        Height = 19
+        Ctl3D = False
+        DataField = 'ID'
+        DataSource = DM.dsQVidi
+        ParentCtl3D = False
+        TabOrder = 0
+      end
+      object dbeName: TDBEdit
+        Left = 48
+        Top = 32
+        Width = 121
+        Height = 19
+        Ctl3D = False
+        DataField = 'NAME'
+        DataSource = DM.dsQVidi
+        ParentCtl3D = False
+        TabOrder = 1
+      end
+    end
+  end
+end

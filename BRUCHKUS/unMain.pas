@@ -1,0 +1,819 @@
+unit unMain;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, ExtCtrls, ComCtrls, Grids, DBGrids, Menus, DBCtrls,unDM, ToolWin,
+  ImgList, Buttons,DBTables;
+
+type
+  TfrmMain = class(TForm)
+    pnlMain: TPanel;
+    gridMain: TDBGrid;
+    StatusBar: TStatusBar;
+    MainMenu: TMainMenu;
+    miService: TMenuItem;
+    pnlTop: TPanel;
+    miConnect: TMenuItem;
+    miDisconnect: TMenuItem;
+    N1: TMenuItem;
+    pmManeger: TPopupMenu;
+    miMode1: TMenuItem;
+    miEdit: TMenuItem;
+    miDelete: TMenuItem;
+    miAdd: TMenuItem;
+    miRefresh: TMenuItem;
+    miSave: TMenuItem;
+    miCancel: TMenuItem;
+    sbNew: TSpeedButton;
+    sbDElete: TSpeedButton;
+    sbPrior: TSpeedButton;
+    sbApply: TSpeedButton;
+    sbCancel: TSpeedButton;
+    sbEdit: TSpeedButton;
+    sbFirst: TSpeedButton;
+    sbNext: TSpeedButton;
+    sbLast: TSpeedButton;
+    sbRefresh: TSpeedButton;
+    N2: TMenuItem;
+    miOpen: TMenuItem;
+    miIzdeliya: TMenuItem;
+    miVidi: TMenuItem;
+    miIzgotoviteli: TMenuItem;
+    miFormi: TMenuItem;
+    procedure miConnectClick(Sender: TObject);
+    procedure miDisconnectClick(Sender: TObject);
+    procedure SetNavBTN;
+    procedure sbFirstClick(Sender: TObject);
+    procedure sbPriorClick(Sender: TObject);
+    procedure sbNextClick(Sender: TObject);
+    procedure sbLastClick(Sender: TObject);
+    procedure sbEditClick(Sender: TObject);
+    procedure sbApplyClick(Sender: TObject);
+    procedure sbCancelClick(Sender: TObject);
+    procedure sbRefreshClick(Sender: TObject);
+    procedure sbDEleteClick(Sender: TObject);
+    procedure sbNewClick(Sender: TObject);
+    procedure miEditClick(Sender: TObject);
+    procedure miDeleteClick(Sender: TObject);
+    procedure miAddClick(Sender: TObject);
+    procedure miRefreshClick(Sender: TObject);
+    procedure pmManegerPopup(Sender: TObject);
+    procedure miSaveClick(Sender: TObject);
+    procedure miCancelClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure N1Click(Sender: TObject);
+    procedure miIzdeliyaClick(Sender: TObject);
+    procedure miVidiClick(Sender: TObject);
+    procedure miIzgotoviteliClick(Sender: TObject);
+    procedure miFormiClick(Sender: TObject);
+    procedure miMode1Click(Sender: TObject);
+    procedure gridMainDblClick(Sender: TObject);
+
+
+  private
+    { Private declarations }
+    _pathTodb:string;
+    procedure SetpathTodb(value:string);
+    procedure setNav(qry:Tquery);
+  public
+    { Public declarations }
+    property pathTodb: string read _pathTodb write SetpathTodb;
+  end;
+
+var
+  frmMain: TfrmMain;
+
+
+implementation
+uses  unConnect, DB, unIzdeliya, unVidi, unIzgotoviteli, unFormi;
+{$R *.dfm}
+procedure TfrmMain.SetpathTodb(value:string);
+begin
+  _pathTodb:=value;
+end;
+procedure TfrmMain.miConnectClick(Sender: TObject);
+begin
+{  showmessage(dm.spDelete_izgotovitel.Params.Items[0].Value);
+  showmessage(dm.spDelete_formi.Params[0].Text);
+  showmessage(dm.spDelete_vid.Params[0].Text);
+  showmessage(dm.spDelete_Izdelie.Params[0].Text);}
+  frmConnect.Show;
+end;
+
+procedure TfrmMain.miDisconnectClick(Sender: TObject);
+begin
+   dm.DB.Connected:=false;
+end;
+procedure TfrmMain.setNav(qry:Tquery);
+begin
+with dm do
+begin
+  sbFirst.Enabled := not isBOF(qry);
+  sbLast.Enabled  := not isEOF(qry);
+  sbPrior.Enabled  := not isBOF(qry);
+  sbNext.Enabled  := not isEOF(qry);
+end;
+end;
+procedure TFrmMain.SetNavBTN;
+begin
+try
+ try
+    gridMain.Cursor:=crHourGlass;
+      with dm do
+      begin
+  if gridMain.DataSource=dsQizdeliya then setNav(Qizdeliya);
+  if gridMain.DataSource=dsQVidi then setNav(QVidi);
+  if gridMain.DataSource=dsQizgotoviteli then setNav(Qizgotoviteli);
+  if gridMain.DataSource=dsQFormi then setNav(QFormi);
+
+  if gridMain.DataSource=dsqUIzdeliyaV  then setNav(QFormi);
+  if gridMain.DataSource=dsQuizdeliyai then setNav(Quizdeliyai);
+  if gridMain.DataSource=dsquizgotoviteli then setNav(quizgotoviteli);
+
+      end;
+finally
+    gridMain.Cursor:=crDefault;
+    cursor:=crDefault;
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+end;
+
+procedure TfrmMain.sbFirstClick(Sender: TObject);
+begin
+try
+ try
+    gridMain.Cursor:=crHourGlass;
+
+with dm do
+begin
+  if gridMain.DataSource=dsQizdeliya then First(Qizdeliya);
+  if gridMain.DataSource=dsQVidi then First(QVidi);
+  if gridMain.DataSource=dsQizgotoviteli then First(Qizgotoviteli);
+  if gridMain.DataSource=dsQFormi then First(QFormi);
+
+  if gridMain.DataSource=dsqUIzdeliyaV then First(qUIzdeliyaV);
+  if gridMain.DataSource=dsQuizdeliyai then First(Quizdeliyai);
+  if gridMain.DataSource=dsquizgotoviteli then First(quizgotoviteli);
+
+  SetNavBTN;
+end;
+finally
+    gridMain.Cursor:=crDefault;
+    cursor:=crDefault;
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+end;
+
+procedure TfrmMain.sbPriorClick(Sender: TObject);
+begin
+try
+ try
+    gridMain.Cursor:=crHourGlass;
+
+with dm do
+begin
+  if gridMain.DataSource=dsQizdeliya then Prior(Qizdeliya);
+  if gridMain.DataSource=dsQVidi then Prior(QVidi);
+  if gridMain.DataSource=dsQizgotoviteli then Prior(Qizgotoviteli);
+  if gridMain.DataSource=dsQFormi then Prior(QFormi);
+
+  if gridMain.DataSource=dsqUIzdeliyaV then Prior(qUIzdeliyaV);
+  if gridMain.DataSource=dsQuizdeliyai then Prior(Quizdeliyai);
+  if gridMain.DataSource=dsquizgotoviteli then Prior(quizgotoviteli);
+
+  SetNavBTN;
+end;
+finally
+    gridMain.Cursor:=crDefault;
+    cursor:=crDefault;
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+end;
+
+procedure TfrmMain.sbNextClick(Sender: TObject);
+begin
+try
+ try
+    gridMain.Cursor:=crHourGlass;
+
+with dm do
+begin
+  if gridMain.DataSource=dsQizdeliya then Next(Qizdeliya);
+  if gridMain.DataSource=dsQVidi then next(QVidi);
+  if gridMain.DataSource=dsQizgotoviteli then Next(Qizgotoviteli);
+  if gridMain.DataSource=dsQFormi then Next(QFormi);
+
+  if gridMain.DataSource=dsqUIzdeliyaV then Next(qUIzdeliyaV);
+  if gridMain.DataSource=dsQuizdeliyai then Next(Quizdeliyai);
+  if gridMain.DataSource=dsquizgotoviteli then Next(quizgotoviteli);
+
+  SetNavBTN;
+end;
+finally
+    gridMain.Cursor:=crDefault;
+    cursor:=crDefault;
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+end;
+
+procedure TfrmMain.sbLastClick(Sender: TObject);
+begin
+try
+ try
+    gridMain.Cursor:=crHourGlass;
+
+with dm do
+begin
+  if gridMain.DataSource=dsQizdeliya then Last(Qizdeliya);
+  if gridMain.DataSource=dsQVidi then last(QVidi);
+  if gridMain.DataSource=dsQizgotoviteli then last(Qizgotoviteli);
+  if gridMain.DataSource=dsQFormi then last(QFormi);
+
+  if gridMain.DataSource=dsqUIzdeliyaV then last(qUIzdeliyaV);
+  if gridMain.DataSource=dsQuizdeliyai then last(Quizdeliyai);
+  if gridMain.DataSource=dsquizgotoviteli then last(quizgotoviteli);
+
+  SetNavBTN;
+end;
+finally
+    gridMain.Cursor:=crDefault;
+    cursor:=crDefault;
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+end;
+
+procedure TfrmMain.sbEditClick(Sender: TObject);
+begin
+try
+ try
+    gridMain.Cursor:=crHourGlass;
+
+with dm do
+begin
+  if gridMain.DataSource=dsQizdeliya then Edit(Qizdeliya);
+  if gridMain.DataSource=dsQVidi then Edit(QVidi);
+  if gridMain.DataSource=dsQizgotoviteli then Edit(Qizgotoviteli);
+  if gridMain.DataSource=dsQFormi then Edit(QFormi);
+
+  if gridMain.DataSource=dsqUIzdeliyaV then Edit(qUIzdeliyaV);
+  if gridMain.DataSource=dsQuizdeliyai then Edit(Quizdeliyai);
+  if gridMain.DataSource=dsquizgotoviteli then Edit(quizgotoviteli);
+
+
+end;
+finally
+    gridMain.Cursor:=crDefault;
+    cursor:=crDefault;
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+end;
+
+procedure TfrmMain.sbApplyClick(Sender: TObject);
+begin
+try
+ try
+    gridMain.Cursor:=crHourGlass;
+
+with dm do
+begin
+  if gridMain.DataSource=dsQizdeliya then ApplyUpdates(Qizdeliya);
+  if gridMain.DataSource=dsQVidi then ApplyUpdates(QVidi);
+  if gridMain.DataSource=dsQizgotoviteli then ApplyUpdates(Qizgotoviteli);
+  if gridMain.DataSource=dsQFormi then ApplyUpdates(QFormi);
+
+  if gridMain.DataSource=dsqUIzdeliyaV then ApplyUpdates(qUIzdeliyaV);
+  if gridMain.DataSource=dsQuizdeliyai then ApplyUpdates(Quizdeliyai);
+  if gridMain.DataSource=dsquizgotoviteli then  ApplyUpdates(quizgotoviteli);
+
+end;
+finally
+    gridMain.Cursor:=crDefault;
+    cursor:=crDefault;
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+end;
+
+procedure TfrmMain.sbCancelClick(Sender: TObject);
+begin
+try
+ try
+    gridMain.Cursor:=crHourGlass;
+
+with dm do
+begin
+  if gridMain.DataSource=dsQizdeliya then CancelUpdates(Qizdeliya);
+  if gridMain.DataSource=dsQVidi then CancelUpdates(QVidi);
+  if gridMain.DataSource=dsQizgotoviteli then CancelUpdates(Qizgotoviteli);
+  if gridMain.DataSource=dsQFormi then  CancelUpdates(QFormi);
+
+  if gridMain.DataSource=dsqUIzdeliyaV then  CancelUpdates(qUIzdeliyaV);
+  if gridMain.DataSource=dsQuizdeliyai then CancelUpdates(Quizdeliyai);
+  if gridMain.DataSource=dsquizgotoviteli then CancelUpdates(quizgotoviteli);
+
+
+end;
+finally
+    gridMain.Cursor:=crDefault;
+    cursor:=crDefault;
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+end;
+
+procedure TfrmMain.sbRefreshClick(Sender: TObject);
+begin
+try
+ try
+    gridMain.Cursor:=crHourGlass;
+
+with dm do
+begin
+  if gridMain.DataSource=dsQizdeliya then
+  begin
+   Qizdeliya.Close;
+   Qizdeliya.Open;
+  end else
+  if gridMain.DataSource=dsQVidi then
+  begin
+   QVidi.Close;
+   QVidi.Open;
+  end else
+  if gridMain.DataSource=dsQizgotoviteli then
+  begin
+    Qizgotoviteli.close;
+    Qizgotoviteli.Open;
+  end else
+  if gridMain.DataSource=dsQFormi then
+  begin
+    QFormi.Close;
+    QFormi.Open;
+  end else
+  if gridMain.DataSource=dsqUIzdeliyaV then
+  begin
+    qUIzdeliyaV.Close;
+    qUIzdeliyaV.Open;
+  end else
+  if gridMain.DataSource=dsQuizdeliyai then
+  begin
+    Quizdeliyai.close;
+    Quizdeliyai.Open;
+  end else
+
+  if gridMain.DataSource=dsquizgotoviteli  then
+  begin
+    quizgotoviteli .close;
+    quizgotoviteli .Open;
+  end else
+
+end;
+finally
+    gridMain.Cursor:=crDefault;
+    cursor:=crDefault;
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+end;
+
+procedure TfrmMain.sbDEleteClick(Sender: TObject);
+begin
+ with dm do
+ try
+   try
+     gridMain.Cursor:=crHourGlass;
+     if gridMain.DataSource=dsQizdeliya then
+          if messagedlg('Удалить Изделия "'+qizdeliya.FieldByName('name').AsString+'`?',
+                        mtConfirmation,[mbYes,mbNo],0) = mryes then
+                          begin
+                                spDelete_Izdelie.ParamByName('IIZDELIE_ID').Asinteger:=qizdeliya.FieldByName('id').AsInteger;
+                                Delete(spDElete_Izdelie);
+                                showmessage('Изделие `'+qizdeliya.FieldByName('name').AsString+'` удалёно!');
+                          end;
+     if gridMain.DataSource=dsQVidi then
+          if messagedlg('Удалить ВИД `'+qVidi.FieldByName('name').AsString+'`?',
+                        mtConfirmation,[mbYes,mbNo],0) = mryes then
+                          begin
+                                spDelete_vid.ParamByName('ivid_name').AsString:=qVidi.FieldByName('name').AsString;
+                                Delete(spDElete_vid);
+                                showmessage('Вид `'+qVidi.FieldByName('name').AsString+'` удалён!');
+                          end;
+      if gridMain.DataSource=dsQizgotoviteli then
+       begin
+          if messagedlg('Удалить изготовителя `'+Qizgotoviteli.FieldByName('name').AsString+'`?',
+                        mtConfirmation,[mbYes,mbNo],0) = mryes then
+                          begin
+                                spDelete_Izgotovitel.ParamByName('iizgotovitel_id').Asinteger:=qIzgotoviteli.FieldByName('id').AsInteger;
+                                Delete(spDelete_izgotovitel);
+                                showmessage('Изготовитель удален!');
+                          end;
+
+       end;
+
+     if gridMain.DataSource=dsQFormi     then
+       begin
+          if messagedlg('Удалить форму собственности "'+QFormi.FieldByName('name').AsString+'"?',
+                        mtConfirmation,[mbYes,mbNo],0) = mryes then
+                          begin
+                                spDElete_Formi.ParamByName('iforma_name').Asstring:=QFormi.FieldByName('name').Asstring;
+                                Delete(spDelete_formi);
+                                showmessage('Форма удалена!');
+                          end;
+
+       end else
+     if gridMain.DataSource=dsqUIzdeliyaV then
+     begin
+          if messagedlg('Удалить Изделия "'+quizdeliyaV.FieldByName('name').AsString+'`?',
+                        mtConfirmation,[mbYes,mbNo],0) = mryes then
+                          begin
+                                spDelete_Izdelie.ParamByName('iizdelie_id').Asinteger:=quizdeliyaV.FieldByName('id').AsInteger;
+                                Delete(spDElete_Izdelie);
+                                showmessage('Изделие `'+quizdeliyav.FieldByName('name').AsString+'` удалёно!');
+                          end;
+     end else
+     if gridMain.DataSource=dsQuizdeliyai then
+     begin
+          if messagedlg('Удалить Изделия "'+quizdeliyaI.FieldByName('name').AsString+'`?',
+                        mtConfirmation,[mbYes,mbNo],0) = mryes then
+                          begin
+                                spDelete_Izdelie.ParamByName('iizdelie_id').Asinteger:=quizdeliyaI.FieldByName('id').AsInteger;
+                                Delete(spDElete_Izdelie);
+                                showmessage('Изделие `'+quizdeliyaI.FieldByName('name').AsString+'` удалёно!');
+                          end;
+     end else
+     if gridMain.DataSource=dsquizgotoviteli  then
+       begin
+          if messagedlg('Удалить изготовителя `'+Quizgotoviteli.FieldByName('name').AsString+'`?',
+                        mtConfirmation,[mbYes,mbNo],0) = mryes then
+                          begin
+                                spDelete_Izgotovitel.ParamByName('iizgotovitel_id').Asinteger:=quIzgotoviteli.FieldByName('id').AsInteger;
+                                Delete(spDelete_izgotovitel);
+                                showmessage('Изготовитель удален!');
+                          end;
+       end else
+   finally
+    gridMain.Cursor:=crDefault;
+   end;
+ except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+
+
+end;
+
+procedure TfrmMain.sbNewClick(Sender: TObject);
+begin
+try
+ try
+    gridMain.Cursor:=crHourGlass;
+
+with dm do
+begin
+  if gridMain.DataSource=dsQizdeliya then Qizdeliya.Insert;
+  if gridMain.DataSource=dsQVidi then QVidi.Insert;
+  if gridMain.DataSource=dsQizgotoviteli then Qizgotoviteli.Insert;
+  if gridMain.DataSource=dsQFormi then QFormi.Insert;
+
+  if gridMain.DataSource=dsqUIzdeliyaV  then qUIzdeliyaV.Insert;
+  if gridMain.DataSource=dsQuizdeliyai then Quizdeliyai.Insert;
+  if gridMain.DataSource=dsquizgotoviteli then quizgotoviteli.Insert;
+
+end;
+finally
+    gridMain.Cursor:=crDefault;
+    cursor:=crDefault;
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+
+end;
+
+procedure TfrmMain.miEditClick(Sender: TObject);
+begin
+  sbEdit.Click;
+end;
+
+procedure TfrmMain.miDeleteClick(Sender: TObject);
+begin
+ sbDElete.Click;
+end;
+
+procedure TfrmMain.miAddClick(Sender: TObject);
+begin
+  sbNew.Click;
+end;
+
+procedure TfrmMain.miRefreshClick(Sender: TObject);
+begin
+  sbRefresh.Click;
+end;
+
+procedure TfrmMain.pmManegerPopup(Sender: TObject);
+begin
+try
+  with dm do
+  begin
+      miEdit.Enabled:=gridMain.SelectedField.Text<>'';
+      miDelete.Enabled:=gridMain.SelectedField.Text<>'';
+      miDelete.Caption:='Удалить';
+      miMode1.Visible:=false;
+
+
+    if gridMain.DataSource =dsQVidi then
+    begin
+      miEdit.Enabled:=gridMain.SelectedField.Text<>'';
+      miDelete.Enabled:=gridMain.SelectedField.Text<>'';
+      miAdd.Enabled:=true;
+      miMode1.Visible:=true;
+      miMode1.Caption:='Изделия данного вида';
+
+    end else
+    if gridMain.DataSource =dsQizgotoviteli then
+    begin
+      miEdit.Enabled:=gridMain.SelectedField.Text<>'';
+      miDelete.Enabled:=gridMain.SelectedField.Text<>'';
+      miMode1.Visible:=true;
+
+      miMode1.Caption:='Изделия данного изготовителя';
+      miAdd.Enabled:=true;
+    end else
+    if gridMain.DataSource =dsQFormi then
+    begin
+      miEdit.Enabled:=gridMain.SelectedField.Text<>'';
+      miDelete.Enabled:=gridMain.SelectedField.Text<>'';
+      miMode1.Visible:=true;
+
+      miMode1.Caption:='Изготовители данной формы собственности';
+      miAdd.Enabled:=true;
+     end else
+
+  end
+  except
+      miEdit.Enabled:=false;
+      miDelete.Enabled:=false;
+      miDelete.Caption:='Удалить';
+      miMode1.Visible:=false;
+
+      miAdd.Enabled:=false;
+      miAdd.Caption:='Добавить';
+  end;
+
+end;
+
+procedure TfrmMain.miSaveClick(Sender: TObject);
+begin
+  sbApply.Click;
+end;
+
+procedure TfrmMain.miCancelClick(Sender: TObject);
+begin
+   sbCancel.Click;
+end;
+
+procedure TfrmMain.FormCreate(Sender: TObject);
+begin
+ sbNew.Enabled:=false;
+ sbApply.Enabled:=false;
+ sbCancel.Enabled:=false;
+ sbDElete.Enabled:=false;
+ sbEdit.Enabled:=false;
+
+ sbFirst.Enabled:=false;
+ sbLast.Enabled:=false;
+ sbNext.Enabled:=false;
+ sbPrior.Enabled:=false;
+ sbRefresh.Enabled:=false;
+
+ miIzdeliya.Enabled:=false;
+ miVidi.Enabled:=false;
+ miIzgotoviteli.Enabled:=false;
+ miFormi.Enabled:=false;   
+end;
+
+
+
+procedure TfrmMain.N1Click(Sender: TObject);
+begin
+ close;
+end;
+
+procedure TfrmMain.miIzdeliyaClick(Sender: TObject);
+begin
+try
+  try
+    gridMain.Cursor:=crHourGlass;
+    gridMain.DataSource:=dm.dsQizdeliya;
+    if not dm.qizdeliya.Active then
+      dm.qizdeliya.Active:=true;
+     StatusBar.Panels[0].Text:='Изделия';
+     StatusBar.Refresh;
+     SetNavBTN;
+ finally
+    gridMain.Cursor:=crDefault;
+
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+
+
+end;
+
+procedure TfrmMain.miVidiClick(Sender: TObject);
+begin
+try
+  try
+    gridMain.Cursor:=crHourGlass;
+    gridMain.DataSource:=dm.dsQVidi;
+    if not dm.qvidi.Active then
+      dm.qVidi.Active:=true;
+     StatusBar.Panels[0].Text:='Виды изделия';
+     StatusBar.Refresh;
+     SetNavBTN;
+ finally
+    gridMain.Cursor:=crDefault;
+
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+
+
+end;
+
+procedure TfrmMain.miIzgotoviteliClick(Sender: TObject);
+begin
+try
+  try
+    gridMain.Cursor:=crHourGlass;
+    gridMain.DataSource:=dm.dsQizgotoviteli ;
+    if not dm.qIzgotoviteli.Active then
+      dm.qIzgotoviteli.Active:=true;
+     StatusBar.Panels[0].Text:='Изготовители';
+     StatusBar.Refresh;
+     SetNavBTN;
+ finally
+    gridMain.Cursor:=crDefault;
+
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+
+
+end;
+
+procedure TfrmMain.miFormiClick(Sender: TObject);
+begin
+try
+  try
+    gridMain.Cursor:=crHourGlass;
+    gridMain.DataSource:=dm.dsQFormi ;
+    if not dm.qFormi.Active then
+      dm.qFormi.Active:=true;
+     StatusBar.Panels[0].Text:='Формы собственности';
+     StatusBar.Refresh;
+     SetNavBTN;
+ finally
+    gridMain.Cursor:=crDefault;
+
+ end;
+except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+
+
+end;
+
+procedure TfrmMain.miMode1Click(Sender: TObject);
+begin
+with dm do
+ try
+   try
+     gridMain.Cursor:=crHourGlass;
+
+     if gridMain.DataSource=dsQVidi then
+     begin
+           gridMain.DataSource:=dsqUIzdeliyaV;
+           if not qUIzdeliyaV.Active then
+             qUIzdeliyaV.Open;
+
+
+           StatusBar.Panels[0].Text:='Изделие вида '+qVidi.fieldByName('name').AsString;
+           StatusBar.Refresh;
+     end;
+     if gridMain.DataSource=dsQizgotoviteli then
+     begin
+           gridMain.DataSource:=dsQuizdeliyai;
+           if not Quizdeliyai.Active then
+             Quizdeliyai.Open;
+
+
+           StatusBar.Panels[0].Text:='Изделия изготовителя '+qIzgotoviteli.fieldByName('name').AsString;
+           StatusBar.Refresh;
+     end;
+
+     if gridMain.DataSource=dsQFormi then
+       begin
+           gridMain.DataSource:=dsquizgotoviteli;
+           if not quizgotoviteli.Active then
+               quizgotoviteli.Open;
+
+
+           StatusBar.Panels[0].Text:='Изготовители формы собственности '+qFormi.fieldByName('name').AsString;
+           StatusBar.Refresh;
+       end;
+   finally
+     gridMain.Cursor:=crDefault;
+ end;
+ except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+
+end;
+
+procedure TfrmMain.gridMainDblClick(Sender: TObject);
+begin
+
+with dm do
+if DB.Connected then
+ try
+   try
+     gridMain.Cursor:=crHourGlass;
+
+     if gridMain.DataSource=dsQVidi then
+     begin
+        frmEditVidi.show;
+        
+     end else
+     if gridMain.DataSource=dsQizgotoviteli then
+     begin
+         frmEditizgotovitel.show;
+     end else
+
+     if gridMain.DataSource=dsQFormi then
+       begin
+       frmEditFormi.show;
+       end else
+     if gridMain.DataSource=dsQizdeliya then
+        frmEditIzdeliya.show;
+   finally
+     gridMain.Cursor:=crDefault;
+ end;
+ except
+  on E:Exception do
+    messageDLG(E.Message,mtError,[mbOk],0);
+   end;
+
+
+end;
+
+end.

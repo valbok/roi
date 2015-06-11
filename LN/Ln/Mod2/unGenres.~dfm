@@ -1,0 +1,99 @@
+inherited fmGenres: TfmGenres
+  Left = 221
+  Top = 201
+  Width = 337
+  Height = 135
+  Caption = 'Genres'
+  OldCreateOrder = True
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited tlbNavigationBar: TToolBar
+    Width = 329
+    inherited sbAccept: TToolButton
+      OnClick = sbAcceptClick
+    end
+    inherited sbCancel: TToolButton
+      OnClick = sbCancelClick
+    end
+    inherited sbDelete: TToolButton
+      OnClick = sbDeleteClick
+    end
+    inherited sbFirst: TToolButton
+      OnClick = sbFirstClick
+    end
+    inherited sbNext: TToolButton
+      OnClick = sbNextClick
+    end
+    inherited sbPrev: TToolButton
+      OnClick = sbPrevClick
+    end
+    inherited sbLast: TToolButton
+      OnClick = sbLastClick
+    end
+  end
+  inherited StatusBar1: TStatusBar
+    Top = 89
+    Width = 329
+    Panels = <
+      item
+        Width = 50
+      end
+      item
+        Width = 50
+      end>
+  end
+  object pnlMain: TPanel [2]
+    Left = 0
+    Top = 29
+    Width = 329
+    Height = 60
+    Align = alClient
+    BevelInner = bvLowered
+    BorderWidth = 2
+    TabOrder = 2
+    object lbNameGenres: TLabel
+      Left = 8
+      Top = 32
+      Width = 96
+      Height = 16
+      Caption = 'Name Genres'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object lbCodeGenres: TLabel
+      Left = 8
+      Top = 8
+      Width = 92
+      Height = 16
+      Caption = 'Code Genres'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object dbeCodeGenres: TDBEdit
+      Left = 160
+      Top = 8
+      Width = 73
+      Height = 21
+      DataField = 'CODE_GENRES'
+      DataSource = dmBooks.dsGenres
+      TabOrder = 0
+    end
+    object dbeNameGenres: TDBEdit
+      Left = 112
+      Top = 32
+      Width = 121
+      Height = 21
+      DataField = 'NAME'
+      DataSource = dmBooks.dsGenres
+      TabOrder = 1
+    end
+  end
+end
